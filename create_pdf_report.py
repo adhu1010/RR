@@ -228,7 +228,7 @@ def build_pdf_report():
         [
             Paragraph("<b>Scope:</b> Active IPL 2026 Roster Targets (List B)", callout_style),
             Paragraph("<b>Seasons:</b> 2022–2026 Continuous Ball-by-Ball", callout_style),
-            Paragraph("<b>Live War-Room:</b> <a href='https://trader-ebooks-pottery-alexandria.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
+            Paragraph("<b>Live War-Room:</b> <a href='https://intelligence-sponsors-unit-common.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[180, 180, 180])
@@ -571,7 +571,7 @@ def build_pdf_report():
         "2. <b>Prioritize Mitchell Santner & Sakib Hussain for Defensive Chokeholds:</b> Santner delivers sub-7.00 RPO economy regardless of dew or batting onslaught. "
         "Sakib Hussain offers elite wicket-taking strike rates (13.0 SR) at an affordable auction price point.<br/>"
         "3. <b>Leverage Live War-Room Dashboard:</b> Use our live interactive dashboard at "
-        "<a href='https://trader-ebooks-pottery-alexandria.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com</u></font></a> "
+        "<a href='https://intelligence-sponsors-unit-common.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com</u></font></a> "
         "to simulate real-time bidding scenarios and model weight adjustments during the live auction.",
         body_style
     ))

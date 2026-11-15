@@ -508,6 +508,9 @@ This is one of the most important architectural decisions in the framework:
 
 ## 🖥️ Interactive War-Room Dashboard
 
+> 🌐 **Live Public Dashboard URL:** **[https://intelligence-sponsors-unit-common.trycloudflare.com](https://intelligence-sponsors-unit-common.trycloudflare.com)**  
+> *(Accessible from any device, mobile or desktop, without installing anything)*
+
 The Streamlit dashboard provides real-time exploration of the framework:
 
 ### Features
