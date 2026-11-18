@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 cloudflared.exe
 .streamlit/
+6af855c0e8386_ball_by_ball.csv
+new/ball_by_ball.csv
+

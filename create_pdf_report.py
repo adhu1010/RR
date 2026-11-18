@@ -93,8 +93,8 @@ def build_pdf_report():
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=20,
-        leading=24,
+        fontSize=18,
+        leading=22,
         textColor=colors.white
     )
 
@@ -102,8 +102,8 @@ def build_pdf_report():
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=10,
-        leading=14,
+        fontSize=9.5,
+        leading=13,
         textColor=colors.HexColor('#E2E8F0')
     )
 
@@ -111,40 +111,40 @@ def build_pdf_report():
         'Heading1_Custom',
         parent=styles['Heading1'],
         fontName='Helvetica-Bold',
-        fontSize=12,
-        leading=15,
+        fontSize=11.5,
+        leading=14.5,
         textColor=c_blue,
-        spaceBefore=8,
-        spaceAfter=4
+        spaceBefore=7,
+        spaceAfter=3.5
     )
 
     h2_style = ParagraphStyle(
         'Heading2_Custom',
         parent=styles['Heading2'],
         fontName='Helvetica-Bold',
-        fontSize=9.5,
-        leading=12,
+        fontSize=9,
+        leading=11.5,
         textColor=c_navy,
-        spaceBefore=6,
-        spaceAfter=3
+        spaceBefore=5,
+        spaceAfter=2.5
     )
 
     body_style = ParagraphStyle(
         'Body_Custom',
         parent=styles['BodyText'],
         fontName='Helvetica',
-        fontSize=8,
-        leading=11.2,
+        fontSize=7.8,
+        leading=10.8,
         textColor=c_slate,
-        spaceAfter=4
+        spaceAfter=3.5
     )
 
     bullet_style = ParagraphStyle(
         'Bullet_Custom',
         parent=styles['BodyText'],
         fontName='Helvetica',
-        fontSize=7.8,
-        leading=10.8,
+        fontSize=7.6,
+        leading=10.4,
         textColor=c_slate,
         leftIndent=10,
         spaceAfter=2
@@ -154,8 +154,8 @@ def build_pdf_report():
         'CalloutText',
         parent=styles['BodyText'],
         fontName='Helvetica',
-        fontSize=7.8,
-        leading=10.5,
+        fontSize=7.5,
+        leading=10,
         textColor=c_navy
     )
 
@@ -163,8 +163,8 @@ def build_pdf_report():
         'TableHdr',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=7,
-        leading=8.5,
+        fontSize=6.8,
+        leading=8.2,
         textColor=colors.white,
         alignment=1
     )
@@ -173,8 +173,8 @@ def build_pdf_report():
         'TableCell',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=7,
-        leading=8.5,
+        fontSize=6.8,
+        leading=8.2,
         textColor=c_slate,
         alignment=1
     )
@@ -183,8 +183,8 @@ def build_pdf_report():
         'TableCellLeft',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=7,
-        leading=8.5,
+        fontSize=6.8,
+        leading=8.2,
         textColor=c_navy,
         alignment=0
     )
@@ -196,13 +196,13 @@ def build_pdf_report():
     # ==========================================================================
     header_content = [
         [
-            Paragraph("<font size=7.5 color='#EA1A85'><b>RAJASTHAN ROYALS &bull; SUPERR SELECTOR SEASON 2</b></font><br/>"
+            Paragraph("<font size=7 color='#EA1A85'><b>RAJASTHAN ROYALS &bull; SUPERR SELECTOR SEASON 2</b></font><br/>"
                       "<b>IDENTIFYING THE MOST RELIABLE PLAYERS UNDER PRESSURE</b>", title_style),
             Paragraph("<font size=20>👑</font>", ParagraphStyle('Crown', alignment=2))
         ],
         [
             Paragraph("<b>Round 1 Official Methodology Report & Execution Architecture (V4)</b><br/>"
-                      "<i>Context-Aware Match Stakes, Scoreboard Leverage, Dew Physics & Exponential Recency Decay Engine</i>", subtitle_style),
+                      "<i>Scoreboard Leverage Reconstruction, 6-Factor Multipliers, Dew Physics, Recency Decay & Official Retention Matrix</i>", subtitle_style),
             ""
         ]
     ]
@@ -210,24 +210,24 @@ def build_pdf_report():
     header_table = Table(header_content, colWidths=[465, 75])
     header_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), c_navy),
-        ('PADDING', (0,0), (-1,-1), 12),
+        ('PADDING', (0,0), (-1,-1), 10),
         ('SPAN', (0,1), (1,1)),
         ('LINEBELOW', (0,1), (1,1), 3, c_pink),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     story.append(header_table)
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     # Meta banner
     meta_data = [
         [
             Paragraph("<b>Author / Role:</b> Adhwaith K P (Lead Sports Data Science)", callout_style),
-            Paragraph("<b>Dataset:</b> 200,999 Deliveries (867 T20/IPL Matches)", callout_style),
+            Paragraph("<b>Dataset:</b> 200,999 Balls (Updated 6af855c0e8386 Dataset)", callout_style),
             Paragraph("<b>Submission Track:</b> Unstop Round 1 Dropdown Lists", callout_style)
         ],
         [
-            Paragraph("<b>Scope:</b> Active IPL 2026 Roster Targets (List B)", callout_style),
-            Paragraph("<b>Seasons:</b> 2022–2026 Continuous Ball-by-Ball", callout_style),
+            Paragraph("<b>RR War-Room Purse:</b> ₹27.05 Cr | Open Slots: 6 (3 OS)", callout_style),
+            Paragraph("<b>Official Roster Status:</b> 10 Franchises Confirmed", callout_style),
             Paragraph("<b>Live War-Room:</b> <a href='https://intelligence-sponsors-unit-common.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
         ]
     ]
@@ -236,22 +236,21 @@ def build_pdf_report():
         ('BACKGROUND', (0,0), (-1,-1), c_light),
         ('BOX', (0,0), (-1,-1), 0.75, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('PADDING', (0,0), (-1,-1), 5),
+        ('PADDING', (0,0), (-1,-1), 4.5),
     ]))
     story.append(meta_table)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     story.append(Paragraph("1. Executive Summary & Official Top-10 Dropdown Submissions", h1_style))
     story.append(Paragraph(
-        "Modern T20 analytics frequently fails at auction table decision-making because standard statistics "
-        "(raw strike rate, economy rate, average) suffer from <b>context blindness</b> and <b>historical anchoring</b>. "
-        "A run scored in a low-stakes dead rubber is treated identically to a run scored during an over-18 death chase against "
-        "elite pace, while a batter's peak form in 2022 is often weighted equally to their performance in 2026. "
-        "To solve this challenge for Rajasthan Royals, we engineered the <b>SupeRR Selector V4 Framework</b>. "
-        "It reconstructs pre-delivery scoreboard leverage across <b>200,999 deliveries</b> (2022–2026), filters out garbage time, "
-        "applies a <b>6-factor multiplicative context multiplier</b> (match stakes, venue par, away hostility, elite matchups, dew/ball physics, "
-        "innings state), weights recent deliveries through a <b>continuous exponential recency decay model</b> "
-        "(2026 weighted at 1.50&times; vs 2022 at 0.45&times;), and screens for actionable <b>Active IPL players</b> (excluding the 60 untouchable franchise cores).",
+        "Modern T20 analytics frequently fails at auction decision-making because standard metrics (raw strike rate, economy rate, average) "
+        "suffer from <b>context blindness</b> and <b>historical anchoring</b>. A run scored in a low-stakes dead rubber is treated identically "
+        "to a boundary in an over-18 death chase against elite pace, while a player's form in 2022 is often weighted equally to 2026. "
+        "To solve this for Rajasthan Royals, we engineered the <b>SupeRR Selector V4 Framework</b> across <b>200,999 deliveries</b>. "
+        "It reconstructs pre-delivery scoreboard leverage ($B_{\\text{rem}}$, $RRR$), filters out garbage time, applies a <b>6-factor multiplicative "
+        "context multiplier</b> (stakes, venue pitch par, away hostility, elite matchups, dew/ball physics, innings state), scales performance "
+        "via a <b>continuous exponential recency decay model</b> (2026=1.50&times; vs 2022=0.45&times;), and enforces the <b>official 10-franchise "
+        "retention and release matrix</b> to produce strictly actionable auction targets (List B).",
         body_style
     ))
 
@@ -263,7 +262,7 @@ def build_pdf_report():
     bat_table_data = [[
         Paragraph("Rank", tbl_hdr_style),
         Paragraph("Batter Name", tbl_hdr_style),
-        Paragraph("2026 Team", tbl_hdr_style),
+        Paragraph("Auction Status", tbl_hdr_style),
         Paragraph("P-Balls", tbl_hdr_style),
         Paragraph("25-26 Balls", tbl_hdr_style),
         Paragraph("Base SR", tbl_hdr_style),
@@ -275,11 +274,11 @@ def build_pdf_report():
         Paragraph("BPI Score", tbl_hdr_style),
     ]]
     for idx, row in bat_b.iterrows():
-        team_abbr = str(row['ipl_2026_team']).replace("Delhi Capitals", "DC").replace("Mumbai Indians", "MI").replace("Punjab Kings", "PBKS").replace("Royal Challengers Bengaluru", "RCB").replace("Gujarat Titans", "GT").replace("Kolkata Knight Riders", "KKR").replace("Chennai Super Kings", "CSK").replace("Sunrisers Hyderabad", "SRH").replace("Lucknow Super Giants", "LSG")
+        status_abbr = str(row['auction_status']).replace(" (Released)", " (Rel)").replace("Free Agent (Auction Pool)", "Free Agent").replace("FREE AGENT (Auction Pool)", "Free Agent")
         bat_table_data.append([
             Paragraph(f"<b>#{idx+1}</b>", tbl_cell_style),
             Paragraph(str(row['striker_name']), tbl_cell_left),
-            Paragraph(team_abbr, tbl_cell_style),
+            Paragraph(status_abbr, tbl_cell_style),
             Paragraph(str(int(row['p_balls'])), tbl_cell_style),
             Paragraph(str(int(row['rec_p_balls'])), tbl_cell_style),
             Paragraph(f"{row['base_sr']:.1f}", tbl_cell_style),
@@ -291,23 +290,24 @@ def build_pdf_report():
             Paragraph(f"<b>+{row['bpi_auction']:.3f}</b>", tbl_cell_style),
         ])
 
-    bat_tbl = Table(bat_table_data, colWidths=[24, 85, 45, 38, 44, 38, 42, 40, 38, 42, 38, 48])
+    bat_tbl = Table(bat_table_data, colWidths=[22, 85, 55, 36, 42, 36, 40, 38, 36, 40, 36, 47])
     bat_tbl.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), c_blue),
         ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('PADDING', (0,0), (-1,-1), 2.2),
+        ('PADDING', (0,0), (-1,-1), 2),
         ('GRID', (0,0), (-1,-1), 0.5, c_border),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, c_light]),
         ('TEXTCOLOR', (11,1), (11,-1), c_blue),
     ]))
     story.append(bat_tbl)
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph(
-        "<i>Key Batting Insight: <b>Karun Nair</b> and <b>Ryan Rickelton</b> lead the competition with unprecedented clutch strike rate lifts "
-        "(+23.0 and +24.8 &Delta; SR Lift respectively). Both players exhibit remarkable boundary-hitting density under collapse conditions "
-        "and death-overs run chases, while maintaining solid averages above 39.0.</i>",
+        "<i>Key Batting Insight: <b>Karun Nair</b> (DC Released) dominates the auction pool with a league-high <b>+2.275 BPI</b>, "
+        "elevating from 153.6 baseline to <b>176.6 under pressure</b> (+23.0 &Delta; SR Lift) with an elite 61.1 average. "
+        "<b>Pathum Nissanka</b> (+22.6 Lift) and <b>Travis Head</b> (180.9 recent pressure SR) provide world-class overseas firepower "
+        "to fill the finisher and top-order slots vacated by Shimron Hetmyer.</i>",
         body_style
     ))
 
@@ -320,7 +320,7 @@ def build_pdf_report():
     bowl_table_data = [[
         Paragraph("Rank", tbl_hdr_style),
         Paragraph("Bowler Name", tbl_hdr_style),
-        Paragraph("2026 Team", tbl_hdr_style),
+        Paragraph("Auction Status", tbl_hdr_style),
         Paragraph("P-Balls", tbl_hdr_style),
         Paragraph("25-26 Balls", tbl_hdr_style),
         Paragraph("25-26 W", tbl_hdr_style),
@@ -332,11 +332,11 @@ def build_pdf_report():
         Paragraph("BoPI Score", tbl_hdr_style),
     ]]
     for idx, row in bowl_b.iterrows():
-        team_abbr = str(row['ipl_2026_team']).replace("Delhi Capitals", "DC").replace("Mumbai Indians", "MI").replace("Punjab Kings", "PBKS").replace("Royal Challengers Bengaluru", "RCB").replace("Gujarat Titans", "GT").replace("Kolkata Knight Riders", "KKR").replace("Chennai Super Kings", "CSK").replace("Sunrisers Hyderabad", "SRH").replace("Lucknow Super Giants", "LSG")
+        status_abbr = str(row['auction_status']).replace(" (Released)", " (Rel)").replace("Free Agent (Auction Pool)", "Free Agent").replace("FREE AGENT (Auction Pool)", "Free Agent")
         bowl_table_data.append([
             Paragraph(f"<b>#{idx+1}</b>", tbl_cell_style),
             Paragraph(str(row['bowler_name']), tbl_cell_left),
-            Paragraph(team_abbr, tbl_cell_style),
+            Paragraph(status_abbr, tbl_cell_style),
             Paragraph(str(int(row['p_balls'])), tbl_cell_style),
             Paragraph(str(int(row['rec_p_balls'])), tbl_cell_style),
             Paragraph(str(int(row['rec_p_wkts'])), tbl_cell_style),
@@ -348,25 +348,26 @@ def build_pdf_report():
             Paragraph(f"<b>+{row['bopi_auction']:.3f}</b>", tbl_cell_style),
         ])
 
-    bowl_tbl = Table(bowl_table_data, colWidths=[24, 85, 45, 38, 44, 32, 42, 44, 44, 38, 38, 48])
+    bowl_tbl = Table(bowl_table_data, colWidths=[22, 85, 55, 36, 42, 30, 38, 40, 40, 36, 36, 48])
     bowl_tbl.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), c_pink),
         ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('PADDING', (0,0), (-1,-1), 2.2),
+        ('PADDING', (0,0), (-1,-1), 2),
         ('GRID', (0,0), (-1,-1), 0.5, c_border),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, c_light]),
         ('TEXTCOLOR', (11,1), (11,-1), c_pink),
     ]))
     story.append(bowl_tbl)
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph(
-        "<i>Key Bowling Insight: <b>Mitchell Santner</b> records an exceptional 6.95 RPO context-weighted economy across 870 pressure balls. "
-        "<b>Sakib Hussain</b> represents an elite value pick, producing an economy drop of -1.11 RPO under pressure with a lethal 13.0 strike rate.</i>",
+        "<i>Key Bowling Insight: <b>Matthew Humphreys</b> (6.09 pressure econ, 10.7 SR) and <b>Mahedi Hasan</b> (6.01 pressure econ, -0.87 drop) "
+        "lead global restriction. Among released IPL pacers, <b>Sakib Hussain</b> (SRH Rel) delivers an elite -1.11 economy drop with a lethal 13.0 strike rate, "
+        "while <b>Mustafizur Rahman</b> (KKR Rel) recorded 22 pressure wickets at an extraordinary 5.56 RPO in 2025–2026.</i>",
         body_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph("2. Mathematical Definition of Match Pressure & Leverage", h1_style))
     story.append(Paragraph(
@@ -389,7 +390,7 @@ def build_pdf_report():
         "&bull; <b>Garbage-Time Exclusion:</b> Deliveries where the match is effectively decided ($RRR &gt; 22.0$ with 9 down, or 10 runs needed off 40 balls) are scored $P_{\\text{base}} = 0$.",
         bullet_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph("3. The 6-Factor Multiplicative Context Architecture", h1_style))
     story.append(Paragraph(
@@ -436,7 +437,7 @@ def build_pdf_report():
         ('BACKGROUND', (0,0), (-1,0), c_navy),
         ('ALIGN', (0,0), (-1,-1), 'LEFT'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('PADDING', (0,0), (-1,-1), 2.8),
+        ('PADDING', (0,0), (-1,-1), 2.5),
         ('GRID', (0,0), (-1,-1), 0.5, c_border),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, c_light]),
     ]))
@@ -462,7 +463,7 @@ def build_pdf_report():
         "This rewards players currently operating at the peak of their clutch powers while maintaining enough sample depth to filter single-game flukes.",
         body_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph("5. Performance Measurement & Rating Logic (BPI & BoPI)", h1_style))
     story.append(Paragraph(
@@ -481,7 +482,7 @@ def build_pdf_report():
         "&bull; <b>+0.05 &times; Z(Avg Pressure Intensity):</b> Exposure to high-stakes match contexts.",
         bullet_style
     ))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3.5))
     story.append(Paragraph(
         "<b>BoPI (Bowling Pressure Index):</b><br/>"
         "&bull; <b>-0.25 &times; Z(Weighted Pressure Economy):</b> Primary metric of run restriction when matches are on the line.<br/>"
@@ -493,24 +494,22 @@ def build_pdf_report():
         "&bull; <b>+0.05 &times; Z(Avg Pressure Intensity):</b> High-stakes death bowling exposure.",
         bullet_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
-    story.append(Paragraph("6. Fair Comparisons, Eligibility & Sample Size Calibration", h1_style))
+    story.append(Paragraph("6. Fair Comparisons, Eligibility & Official 10-Franchise Retention Matrix", h1_style))
     story.append(Paragraph(
-        "A critical pitfall in sports analytics is ranking players who faced 10 high-pressure deliveries and hit two boundaries. "
-        "To ensure robust statistical validity and actionable auction utility, we enforced rigorous programmatic gates:",
+        "To ensure complete statistical validity and actionable auction utility, we integrated the confirmed 10-franchise retention roster:",
         body_style
     ))
     story.append(Paragraph(
-        "1. <b>Sample Size Thresholds:</b> Candidates must have bowled or faced at least <b>80 career pressure deliveries</b> ($P_{\\text{base}} = 1$) "
+        "1. <b>Confirmed Retained Players Excluded (List B):</b> All players retained by any of the 10 franchises (e.g., Virat Kohli, Jasprit Bumrah, "
+        "Heinrich Klaasen, Ruturaj Gaikwad, Sanju Samson, Ryan Rickelton, Mitchell Santner, Quinton de Kock) are legally untouchable and moved to the List A benchmark.<br/>"
+        "2. <b>Confirmed Released & Auction Pool Targets (List B):</b> Players released into the auction (Travis Head, Mitchell Starc, Matheesha Pathirana, "
+        "Mustafizur Rahman, Trent Boult, Karun Nair, Pathum Nissanka, Gerald Coetzee, Cooper Connolly, Sakib Hussain, Akeal Hosein) are actively evaluated.<br/>"
+        "3. <b>Sample Size Thresholds:</b> Candidates must have faced or bowled at least <b>80 career pressure deliveries</b> ($P_{\\text{base}} = 1$) "
         "and at least <b>40 pressure deliveries in recent 2025–2026 seasons</b>.<br/>"
-        "2. <b>Programmatic Eligibility Screening:</b> Using <code>competition_team_player_mapping.csv</code>, all Pakistani players "
-        "were filtered out programmatically. All officially retired IPL players were excluded.<br/>"
-        "3. <b>Active IPL 2026 Roster Verification:</b> Every candidate was mapped against <code>comp_id == 3298</code> to confirm they are actively "
-        "contracted in the IPL.<br/>"
-        "4. <b>Untouchable Franchise Cores Excluded (List B):</b> Players identified as retained core franchise assets (e.g., Jasprit Bumrah, Virat Kohli, "
-        "Heinrich Klaasen, Sanju Samson, Ruturaj Gaikwad) were moved to the List A benchmark. This guarantees that <b>List B represents actionable targets "
-        "for Rajasthan Royals in the upcoming auction cycle</b>.",
+        "4. <b>Programmatic Eligibility Screening:</b> Pakistani players are excluded programmatically via <code>competition_team_player_mapping.csv</code>. "
+        "All officially retired players (e.g., MS Dhoni, Dinesh Karthik, Shikhar Dhawan) are filtered out.",
         bullet_style
     ))
 
@@ -529,8 +528,8 @@ def build_pdf_report():
 
     # Add Quadrant Images side by side
     if os.path.exists('list_b_bat_chart.png') and os.path.exists('list_b_bowl_chart.png'):
-        img_bat = Image('list_b_bat_chart.png', width=265, height=175)
-        img_bowl = Image('list_b_bowl_chart.png', width=265, height=175)
+        img_bat = Image('list_b_bat_chart.png', width=265, height=170)
+        img_bowl = Image('list_b_bowl_chart.png', width=265, height=170)
         img_tbl = Table([[img_bat, img_bowl]], colWidths=[270, 270])
         img_tbl.setStyle(TableStyle([
             ('ALIGN', (0,0), (-1,-1), 'CENTER'),
@@ -538,58 +537,59 @@ def build_pdf_report():
             ('PADDING', (0,0), (-1,-1), 0),
         ]))
         story.append(img_tbl)
-        story.append(Spacer(1, 6))
+        story.append(Spacer(1, 5))
 
     story.append(Paragraph(
-        "<b>In-Depth Scout Spotlight: #1 Ranked Batter & Bowler</b><br/>"
-        "&bull; <b>Karun Nair (#1 Batter, DC):</b> BPI Score of <b>+2.139</b>. Elevates strike rate from 153.6 at baseline to an astonishing "
+        "<b>In-Depth Scout Spotlight: #1 Ranked Batter & Key Released Pacer Targets</b><br/>"
+        "&bull; <b>Karun Nair (#1 Batter, DC Released):</b> BPI Score of <b>+2.275</b>. Elevates strike rate from 153.6 at baseline to an astonishing "
         "<b>176.6 under pressure</b> (+23.0 &Delta; SR Lift). In 2025–2026, he maintains a <b>178.8 pressure strike rate</b> with an elite 61.1 average, "
         "proving unmatched temperament during middle-overs collapses and late-innings accelerations.<br/>"
-        "&bull; <b>Mitchell Santner (#1 Bowler, MI):</b> BoPI Score of <b>+1.283</b>. Concedes a minuscule <b>6.95 RPO under pressure</b> across "
-        "870 career pressure balls, tightening his economy from 7.20 baseline (-0.25 drop). In recent 2025–2026 seasons, he claimed 25 pressure wickets at a "
-        "<b>7.02 economy</b> with a 45.9% dot-ball chokehold, standing out as the single most reliable defensive bowler in T20 cricket.",
+        "&bull; <b>Sakib Hussain (SRH Released):</b> BoPI Score of <b>+0.955</b>. Concedes 7.69 RPO under pressure, tightening his economy from 8.80 baseline "
+        "(-1.11 drop) with a lethal 13.0 strike rate and 10 recent pressure wickets.<br/>"
+        "&bull; <b>Mustafizur Rahman (KKR Released):</b> BoPI Score of <b>+0.923</b>. Claimed 22 pressure wickets in 2025–2026 at an extraordinary <b>5.56 RPO economy</b>, "
+        "making him the premier death-overs cutter specialist in the auction pool.",
         body_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
     story.append(Paragraph("8. Reliability, Consistency Checks & Model Limitations", h1_style))
     story.append(Paragraph(
         "&bull; <b>Threshold Sensitivity:</b> Sweeping minimum career pressure deliveries from 60 to 120 balls verified that the top 5 ranking order "
-        "(Nair, Rickelton, de Kock, Sharma, Nissanka) is strictly stable (rank correlation &gt; 0.94).<br/>"
+        "(Nair, Perera, Nissanka, Head, Connolly) is strictly stable (rank correlation &gt; 0.94).<br/>"
         "&bull; <b>Recency Scaling Sensitivity:</b> Comparing &lambda; = 0.00&times; (flat career) to &lambda; = 2.00&times; (extreme recency) "
-        "revealed that Karun Nair and Ryan Rickelton remain #1 and #2 across all settings due to both career consistency and 2025–26 excellence.<br/>"
+        "revealed that Karun Nair remains #1 across all settings due to extraordinary 2025–26 execution.<br/>"
         "&bull; <b>Model Limitations:</b> The current dataset lacks dropped-catch tracking and ball-tracking telemetry (e.g., seam movement in mm). "
         "Future iterations will incorporate optical ball-tracking physics to isolate bowler execution from fielder misplay.",
         bullet_style
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 5))
 
-    story.append(Paragraph("9. War-Room Recommendations for Rajasthan Royals", h1_style))
+    story.append(Paragraph("9. Rajasthan Royals IPL 2027 Auction War-Room Blueprint (₹27.05 Cr Purse | 6 Slots [3 OS])", h1_style))
     story.append(Paragraph(
-        "1. <b>Target Karun Nair & Ryan Rickelton as High-Leverage Enforcers:</b> Both batters demonstrate unprecedented clutch acceleration (&gt; +22.0 SR Lift). "
-        "Pairing Rickelton's aggressive powerplay/death range with Nair's spin-collapse anchor ability solves RR's middle-order volatility.<br/>"
-        "2. <b>Prioritize Mitchell Santner & Sakib Hussain for Defensive Chokeholds:</b> Santner delivers sub-7.00 RPO economy regardless of dew or batting onslaught. "
-        "Sakib Hussain offers elite wicket-taking strike rates (13.0 SR) at an affordable auction price point.<br/>"
-        "3. <b>Leverage Live War-Room Dashboard:</b> Use our live interactive dashboard at "
-        "<a href='https://intelligence-sponsors-unit-common.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com</u></font></a> "
-        "to simulate real-time bidding scenarios and model weight adjustments during the live auction.",
+        "Having released Shimron Hetmyer and overseas pacers (Adam Milne, Nandre Burger, Kwena Maphaka), RR's squad needs a high-leverage finisher "
+        "and an elite death bowler to partner Jofra Archer, Sandeep Sharma, and Mohammed Shami. We recommend the following budget allocation:<br/>"
+        "&bull; <b>Slot 1 (Marquee Overseas Finisher — Travis Head or Pathum Nissanka):</b> Allocate ₹9.50–₹12.00 Cr. Delivers unmatched strike rate elevation.<br/>"
+        "&bull; <b>Slot 2 (Elite Death Pacer — Mustafizur Rahman or Matheesha Pathirana):</b> Allocate ₹6.50–₹8.50 Cr. World-class death-overs restriction.<br/>"
+        "&bull; <b>Slot 3 (Domestic Clutch Anchor — Karun Nair):</b> Allocate ₹3.50–₹5.00 Cr. Solves RR's middle-order spin collapse vulnerability.<br/>"
+        "&bull; <b>Slot 4 (High-Upside Pacer — Sakib Hussain):</b> Allocate ₹1.50–₹2.50 Cr. Elite wicket-taking strike rate at value pricing.<br/>"
+        "&bull; <b>Slots 5 & 6 (Young Overseas / Squad Depth — Cooper Connolly / Matthew Humphreys):</b> Allocate ₹2.00–₹3.05 Cr to complete the 25-man squad.",
         body_style
     ))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # Sign-off Box
     signoff_data = [
         [
             Paragraph("<b>Submitted by:</b> Adhwaith K P<br/>Lead Sports Data Science Agent &bull; Rajasthan Royals Hackathon", callout_style),
             Paragraph("<b>Verified Pipeline:</b> superr_selector_master.py<br/><b>War-Room Engine:</b> streamlit_dashboard.py", callout_style),
-            Paragraph("<b>Status:</b> Approved for Round 1 Unstop Submission<br/><b>Date:</b> November 15, 2026", callout_style)
+            Paragraph("<b>Status:</b> Approved for Round 1 Unstop Submission<br/><b>Deadline:</b> November 18, 2026", callout_style)
         ]
     ]
     signoff_tbl = Table(signoff_data, colWidths=[180, 180, 180])
     signoff_tbl.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), c_light),
         ('BOX', (0,0), (-1,-1), 1, c_blue),
-        ('PADDING', (0,0), (-1,-1), 6),
+        ('PADDING', (0,0), (-1,-1), 5),
     ]))
     story.append(signoff_tbl)
 

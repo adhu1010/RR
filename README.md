@@ -468,48 +468,80 @@ This is one of the most important architectural decisions in the framework:
 
 ---
 
-## 🏆 Official Top 10 Players
+## 🏆 Official Top 10 Players Under Pressure (V5 Official)
 
-### Top 10 Batters Under Pressure (List B — Auction Targets)
+> **Official 10-Franchise Retention Update:** The IPL 2027 confirmed retention and trade matrix (184 locked players) has been formally integrated. Players previously considered for the auction pool who were confirmed retained (e.g. Ryan Rickelton, Quinton de Kock, Mitchell Santner, Corbin Bosch, Ashutosh Sharma, Vipraj Nigam, Devdutt Padikkal, Tom Banton, Finn Allen, Nathan Ellis, Jamie Overton, and Mohsin Khan) have been transferred to the **List A Benchmark**, clearing the stage for genuine, officially released auction targets.
 
-| Rank | Batter | 2026 Franchise | Career P-Balls | 2025–26 P-Balls | Base SR | Pressure SR | 2025–26 P-SR | Δ SR Lift | BPI Score |
-|:---:|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **#1** | **Karun Nair** | Delhi Capitals | 90 | 85 | 153.6 | **176.6** | 178.8 | +23.0 | **+2.139** |
-| **#2** | **Ryan Rickelton** | Mumbai Indians | 295 | 230 | 157.6 | **182.4** | 188.3 | +24.8 | **+1.816** |
-| **#3** | **Quinton de Kock** | Mumbai Indians | 487 | 126 | 150.9 | **165.3** | 179.4 | +14.4 | **+1.185** |
-| **#4** | **Ashutosh Sharma** | Delhi Capitals | 292 | 196 | 166.3 | **174.2** | 171.9 | +7.9 | **+1.134** |
-| **#5** | **Pathum Nissanka** | Delhi Capitals | 486 | 221 | 135.4 | **158.0** | 161.1 | +22.6 | **+1.035** |
-| **#6** | **Cooper Connolly** | Punjab Kings | 135 | 135 | 156.5 | **163.8** | 164.4 | +7.3 | **+0.907** |
-| **#7** | **Vipraj Nigam** | Delhi Capitals | 81 | 81 | 176.4 | **169.5** | 172.8 | -6.9 | **+0.894** |
-| **#8** | **Devdutt Padikkal** | RCB | 272 | 86 | 138.9 | **149.3** | 183.7 | +10.4 | **+0.622** |
-| **#9** | **Tom Banton** | Gujarat Titans | 176 | 137 | 159.5 | **162.2** | 159.9 | +2.7 | **+0.587** |
-| **#10** | **Finn Allen** | KKR | 128 | 83 | 174.5 | **170.2** | 183.1 | -4.3 | **+0.528** |
+### Option A: Top 10 Released Batters Under Pressure (IPL-Proven Pool)
+
+| Rank | Batter Name | Official 2027 Auction Status | IPL Gms | Career P-Balls | 2025–26 P-Balls | Base SR | Pressure SR | 2025–26 P-SR | Δ SR Lift | BPI Score |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **#1** | **Karun Nair** | Released (Delhi Capitals) | 12 | 90 | 85 | 153.6 | **176.6** | 178.8 | +23.0 | **+1.970** |
+| **#2** | **Pathum Nissanka** | Released (Delhi Capitals) | 10 | 486 | 221 | 135.4 | **158.0** | 161.1 | +22.6 | **+1.127** |
+| **#3** | **Travis Head** | Released (Sunrisers Hyderabad) | 42 | 216 | 131 | 174.9 | **175.4** | 180.9 | +0.5 | **+1.031** |
+| **#4** | **Sarfaraz Khan** | Released (Chennai Super Kings) | 16 | 145 | 70 | 136.2 | **157.7** | 177.1 | +21.5 | **+0.740** |
+| **#5** | **Ajinkya Rahane** | Released (Kolkata Knight Riders) | 56 | 309 | 193 | 139.1 | **148.4** | 148.2 | +9.3 | **+0.631** |
+| **#6** | **Mayank Agarwal** | Free Agent (T20I / Unattached) | 30 | 157 | 32 | 127.3 | **140.4** | 159.4 | +13.1 | **+0.538** |
+| **#7** | **Harry Brook** | Free Agent (T20I / Unattached) | 11 | 454 | 179 | 163.8 | **157.1** | 172.6 | -6.7 | **+0.528** |
+| **#8** | **David Miller** | Released (Delhi Capitals) | 58 | 995 | 219 | 149.3 | **151.9** | 145.2 | +2.6 | **+0.479** |
+| **#9** | **M Shahrukh Khan** | Released (Gujarat Titans) | 43 | 277 | 101 | 151.7 | **154.2** | 164.4 | +2.5 | **+0.478** |
+| **#10** | **Daryl Mitchell** | Free Agent (T20I / Unattached) | 15 | 673 | 189 | 145.0 | **148.3** | 168.3 | +3.3 | **+0.471** |
 
 **Scout Spotlight — Karun Nair (#1):** Elevates from 153.6 SR at baseline to an astonishing **176.6 SR under pressure** (+23.0 Δ SR Lift). In 2025–26, he maintains 178.8 pressure SR with an elite 61.1 average — unmatched temperament during collapses and death-overs accelerations.
 
-### Top 10 Bowlers Under Pressure (List B — Auction Targets)
+---
 
-| Rank | Bowler | 2026 Franchise | Career P-Balls | 2025–26 P-Balls | 2025–26 Wkts | Base Econ | Press Econ | 2025–26 Econ | Δ Econ Drop | BoPI Score |
-|:---:|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **#1** | **Mitchell Santner** | Mumbai Indians | 870 | 395 | 25 | 7.20 | **6.95** | 7.02 | -0.25 | **+1.283** |
-| **#2** | **Sakib Hussain** | Sunrisers Hyderabad | 138 | 138 | 10 | 8.80 | **7.69** | 7.65 | -1.11 | **+1.240** |
-| **#3** | **Akeal Hosein** | Chennai Super Kings | 595 | 295 | 17 | 7.53 | **7.32** | 6.71 | -0.21 | **+1.098** |
-| **#4** | **Mustafizur Rahman** | KKR | 875 | 354 | 22 | 7.45 | **7.54** | 5.56 | +0.09 | **+1.074** |
-| **#5** | **Jamie Overton** | Chennai Super Kings | 218 | 191 | 19 | 8.25 | **8.27** | 8.29 | +0.02 | **+0.929** |
-| **#6** | **Vipraj Nigam** | Delhi Capitals | 162 | 162 | 6 | 9.29 | **7.64** | 7.59 | -1.65 | **+0.827** |
-| **#7** | **Corbin Bosch** | Mumbai Indians | 180 | 180 | 13 | 8.32 | **8.33** | 8.20 | +0.01 | **+1.033** |
-| **#8** | **Nathan Ellis** | Chennai Super Kings | 542 | 175 | 12 | 7.91 | **8.08** | 7.47 | +0.17 | **+0.848** |
-| **#9** | **George Linde** | Lucknow Super Giants | 111 | 81 | 6 | 7.61 | **7.90** | 8.52 | +0.29 | **+0.802** |
-| **#10** | **Mohsin Khan** | Lucknow Super Giants | 338 | 100 | 6 | 8.15 | **8.28** | 7.68 | +0.13 | **+0.927** |
+### Option A: Top 10 Released Bowlers Under Pressure (IPL-Proven Pool)
 
-**Scout Spotlight — Mitchell Santner (#1):** Concedes a minuscule **6.95 RPO under pressure** across 870 career pressure balls — the largest sample in the bowling pool. Tightens his economy from 7.20 baseline (-0.25 drop). In 2025–26, he claimed 25 pressure wickets with a 45.9% dot-ball chokehold.
+| Rank | Bowler Name | Official 2027 Auction Status | IPL Gms | Career P-Balls | 2025–26 P-Balls | 2025–26 Wkts | Base Econ | Press Econ | 2025–26 Econ | Δ Econ Drop | BoPI Score |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **#1** | **Mujeeb Ur Rahman** | Free Agent (T20I / Unattached) | 1 | 343 | 194 | 14 | 6.78 | **6.89** | 7.33 | +0.11 | **+1.139** |
+| **#2** | **Sakib Hussain** | Released (Sunrisers Hyderabad) | 11 | 138 | 138 | 10 | 8.80 | **7.69** | 7.65 | -1.11 | **+1.062** |
+| **#3** | **Mark Wood** | Free Agent (T20I / Unattached) | 4 | 135 | 31 | 1 | 7.72 | **7.96** | 7.94 | +0.24 | **+1.013** |
+| **#4** | **Akeal Hosein** | Released (Chennai Super Kings) | 8 | 595 | 295 | 17 | 7.53 | **7.32** | 6.71 | -0.21 | **+0.953** |
+| **#5** | **Mustafizur Rahman** | Released (Kolkata Knight Riders) | 22 | 875 | 354 | 22 | 7.45 | **7.54** | **5.56** | +0.09 | **+0.939** |
+| **#6** | **Sikandar Raza** | Free Agent (T20I / Unattached) | 7 | 456 | 156 | 8 | 6.90 | **6.77** | 6.81 | -0.13 | **+0.825** |
+| **#7** | **Praful Hinge** | Released (Sunrisers Hyderabad) | 7 | 74 | 74 | 8 | 11.06 | **9.59** | 9.57 | -1.47 | **+0.716** |
+| **#8** | **George Linde** | Released (Lucknow Super Giants) | 3 | 111 | 81 | 6 | 7.61 | **7.90** | 8.52 | +0.29 | **+0.664** |
+| **#9** | **Joshua Little** | Free Agent (T20I / Unattached) | 11 | 390 | 66 | 3 | 7.88 | **7.85** | 7.64 | -0.03 | **+0.620** |
+| **#10** | **Wanindu Hasaranga** | Released (Lucknow Super Giants) | 35 | 999 | 308 | 23 | 7.87 | **8.13** | 8.20 | +0.26 | **+0.599** |
+
+**Scout Spotlight — Mustafizur Rahman (#5):** Concedes an unbelievable **5.56 RPO under pressure in 2025–26** across 354 deliveries while taking 22 wickets. Elite left-arm cutter variation makes him Rajasthan Royals' primary overseas death bowling target.
+
+---
+
+### Option B: Extended Global T20I Pool (Includes Uncapped / Associate Gems)
+For scouting beyond IPL capped rosters:
+- **Batters:** Karun Nair (#1), Kusal Perera (#2), Pathum Nissanka (#3), Travis Head (#4), Cooper Connolly (#5), Muhammad Waseem (#6), Tim Robinson (#7), Tanzid Hasan (#8), Sarfaraz Khan (#9), Ajinkya Rahane (#10).
+- **Bowlers:** Matthew Humphreys (#1), Mahedi Hasan (#2), Hasan Mahmud (#3), Josh Tongue (#4), Mujeeb Ur Rahman (#5), Sakib Hussain (#6), Akeal Hosein (#7), Mustafizur Rahman (#8), Sikandar Raza (#9), Benjamin Sears (#10).
+
+---
+
+## 💰 Rajasthan Royals IPL 2027 War-Room Shopping Blueprint
+
+### Franchise Financial Context
+- **Remaining Purse:** ₹27.05 Crore
+- **Open Slots:** 6 Slots (3 Overseas, 3 Indian)
+- **Retained Core (19 Players):** Riyan Parag (c), Yashasvi Jaiswal, Dhruv Jurel, Vaibhav Sooryavanshi, Jofra Archer, Sandeep Sharma, Mohammed Shami (Traded in from LSG), M. Siddharth (Traded in from LSG), Ravindra Jadeja.
+- **Key Released Players:** Shimron Hetmyer, Tushar Deshpande, Adam Milne, Nandre Burger, Kwena Maphaka, Kuldeep Sen.
+
+### 6-Slot Allocation Table (Target Spend: ₹20.80 Cr – ₹26.80 Cr)
+
+| Slot # | Target Role (Replacing Released RR Player) | Primary V5 Target | Backup V5 Target | Key Pressure Metric (V5) | Target Bid Cap |
+| :---: | :--- | :--- | :--- | :--- | :---: |
+| **Slot 1 (OS #1)** | Left-Arm Death Pacer *(Replaces Burger / Maphaka)* | **Mustafizur Rahman** (Rel. KKR) | Spencer Johnson (Rel. CSK) | 5.56 Pressure Econ in 2025–26 (22 Wkts) | **₹6.50 Cr – ₹8.50 Cr** |
+| **Slot 2 (OS #2)** | Overseas Finisher / Top-Order *(Replaces Hetmyer)* | **David Miller / Travis Head** | Pathum Nissanka (Rel. DC) | Head: 180.9 Rec SR \| Miller: 995 P-Balls | **₹6.00 Cr – ₹8.00 Cr** |
+| **Slot 3 (OS #3)** | Overseas Attacking Spinner *(Replaces Bishnoi / Puthur)* | **Wanindu Hasaranga** (Rel. LSG) | Akeal Hosein / Mujeeb Ur Rahman | Hasaranga: 80 P-Wkts \| Hosein: 6.71 Econ | **₹4.50 Cr – ₹6.00 Cr** |
+| **Slot 4 (IND #1)** | Indian Middle-Order Anchor *(Domestic Depth)* | **Karun Nair** (Rel. DC) | Sarfaraz Khan (Rel. CSK) | Nair: +1.970 BPI, 178.8 SR, 61.1 Avg | **₹2.00 Cr – ₹3.50 Cr** |
+| **Slot 5 (IND #2)** | Indian Power Finisher *(No. 6/7 Impact)* | **M Shahrukh Khan** (Rel. GT) | Abishek Porel / Nitish Rana | Shahrukh: 164.4 Pressure SR in 2025–26 | **₹1.50 Cr – ₹2.50 Cr** |
+| **Slot 6 (IND #3)** | Uncapped Death/PP Pacer *(Replaces Deshpande / Sen)* | **Sakib Hussain** (Rel. SRH) | Praful Hinge / Akash Madhwal | Sakib: 7.65 Rec Econ (-1.11 RPO Drop) | **₹0.30 Cr – ₹0.80 Cr** |
 
 ---
 
 ## 🖥️ Interactive War-Room Dashboard
 
-> 🌐 **Live Public Dashboard URL:** **[https://intelligence-sponsors-unit-common.trycloudflare.com](https://intelligence-sponsors-unit-common.trycloudflare.com)**  
-> *(Accessible from any device, mobile or desktop, without installing anything)*
+> 🌐 **Live Public Dashboard URL:** **[https://chevy-thesis-chapters-aus.trycloudflare.com](https://chevy-thesis-chapters-aus.trycloudflare.com)**  
+> *(Globally accessible from mobile or desktop — powered by Streamlit & Cloudflare Tunnel)*
 
 The Streamlit dashboard provides real-time exploration of the framework:
 
