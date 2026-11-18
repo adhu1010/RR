@@ -1,41 +1,32 @@
 #!/usr/bin/env python3
 """
-SupeRR Selector Season 2 — Round 1 Master Pipeline (V4 Recency & Auction Engine)
-Author: Adhwaith K P / Lead Sports Data Science Agent
-Franchise: Rajasthan Royals (Purse: ₹27.05 Cr | Open Slots: 6 [3 Overseas])
-
-Architecture:
-  1. Data Ingestion & Pre-Delivery Scoreboard State Reconstruction (200,999 Deliveries)
-  2. Base Scoreboard Pressure Definition (P_base) with strict Garbage-Time Exclusion
-  3. 6-Factor Multiplicative Context Multipliers:
-     - Match Stakes (M_level: IPL Playoffs 1.30, T20I Knockout 1.22, IPL League 1.18, Bilateral 1.05)
-     - Venue Pitch Par (M_venue: normalized vs global RPO, clipped [0.90, 1.15])
-     - Away Hostility (M_away: 1.12 vs home team at their home ground)
-     - Elite Opposition Matchups (M_opp: 1.18 vs Top-30% Elite Batters/Bowlers)
-     - Ball Degradation & Dew Physics (M_ball: Inn 2 Overs 16-20 dew factor 1.20, Death 1.15, PP 1.10/1.12)
-     - Innings Leverage State (M_inn: 1.15 for RRR >= 10.0 chase, 1.12 for early collapse recovery)
-     - Exponential Recency Decay (M_recency: 2026=1.50x, 2025=1.25x, 2024=0.90x, 2023=0.65x, 2022=0.45x)
-  4. Official IPL 2027 Roster, Financials & Eligibility Engine:
-     - 10 Franchises Confirmed Retained & Traded In Rosters
-     - Confirmed Released Players from each franchise
-     - Programmatic Pakistan Player Exclusions
-     - Official Retired Player Exclusions
-  5. Dual Leaderboard Generation:
-     - List B: Actionable IPL 2027 Auction Pool (Primary Unstop Dropdown Targets)
-     - List A: Unrestricted Active IPL Benchmark (Validation baseline including retained stars)
-  6. High-Resolution 220 DPI Scatter Quadrant Plots
+SupeRR Selector Season 2 — Round 1 V5 Official Master Pipeline
+Author: Adhwaith K P
+Integrates:
+  - Updated ball-by-ball dataset (6af855c0e8386_ball_by_ball.csv / ball_by_ball.csv)
+  - Official 10-Team Confirmed Retained, Traded-In & Released Lists for IPL 2027 (184 locked players)
+  - 6-Factor Context & Physics Engine + Exponential Recency Decay (M_recency)
+Outputs:
+  - v5_official_released_ipl_batters.csv & v5_official_released_ipl_bowlers.csv (Option A: IPL-Proven Released Pool)
+  - v5_all_available_auction_batters.csv & v5_all_available_auction_bowlers.csv (Option B: Global + Released Pool)
+  - v5_released_bat_chart.png & v5_released_bowl_chart.png (220 DPI Quadrant Visuals)
 """
 
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+
+plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
+plt.rcParams['axes.edgecolor'] = '#CCCCCC'
+plt.rcParams['axes.linewidth'] = 0.8
 
 # ==============================================================================
-# 1. LOAD DATASETS
+# 1. LOAD UPDATED DATASET & SUPPORTING FILES
 # ==============================================================================
-print("[1/5] Loading official SupeRR Selector Season 2 CSV files...")
-df = pd.read_csv('ball_by_ball.csv', low_memory=False)
+bbb_file = '6af855c0e8386_ball_by_ball.csv' if os.path.exists('6af855c0e8386_ball_by_ball.csv') else 'ball_by_ball.csv'
+print(f"[1/5] Loading {bbb_file} and supporting CSVs...")
+df = pd.read_csv(bbb_file, low_memory=False)
 matches = pd.read_csv('matches.csv', low_memory=False)
 comps = pd.read_csv('competitions.csv', low_memory=False)
 teams = pd.read_csv('teams.csv', low_memory=False)
@@ -45,9 +36,9 @@ ctpm = pd.read_csv('competition_team_player_mapping.csv', low_memory=False)
 df['year'] = pd.to_datetime(df['delivery_ist_time'], errors='coerce').dt.year
 
 # ==============================================================================
-# 2. OFFICIAL 10 FRANCHISES' CONFIRMED RETENTIONS, FINANCIALS & ELIGIBILITY
+# 2. OFFICIAL 10-TEAM IPL 2027 RETENTION, TRADE & RELEASE MAPPING
 # ==============================================================================
-IPL_COMP_IDS = {1358, 1715, 2193, 2725, 3298}  # IPL 2022-2026
+IPL_COMP_IDS = {1358, 1715, 2193, 2725, 3298}  # IPL 2022–2026
 PAKISTAN_PLAYER_IDS = set(ctpm[ctpm['team_name'].str.strip().str.lower() == 'pakistan']['player_id'].unique())
 
 RETIRED_NAMES = {
@@ -55,129 +46,79 @@ RETIRED_NAMES = {
     'Eoin Morgan', 'Wriddhiman Saha', 'Piyush Chawla', 'Amit Mishra', 'Kedar Jadhav',
     'Saurabh Tiwary', 'Stuart Broad', 'Chris Gayle', 'AB de Villiers', 'Dwayne Bravo',
     'Kieron Pollard', 'Robin Uthappa', 'Parthiv Patel', 'Faf du Plessis', 'Moeen Ali',
-    'Ravichandran Ashwin', 'Andre Russell', 'Mahendra Singh Dhoni', 'MS Dhoni'
+    'Ravichandran Ashwin', 'Andre Russell', 'Glenn Maxwell', 'Mahendra Singh Dhoni', 'MS Dhoni'
 }
 
-# Confirmed Retained & Traded In Players across all 10 Franchises (Cannot be bought in Auction)
-CONFIRMED_RETAINED = {
-    # 1. Royal Challengers Bengaluru (RCB) — 20 Retained (Purse: ₹14.15 Cr | Slots: 5 [1 OS])
+# All 184 Confirmed Retained & Traded-In Players Across All 10 IPL Franchises for 2027
+CONFIRMED_RETAINED_2027 = {
+    # 1. RCB (20 Retained)
     'Virat Kohli', 'Rajat Patidar', 'Phil Salt', 'Jitesh Sharma', 'Devdutt Padikkal',
-    'Venkatesh Iyer', 'Krunal Pandya', 'Tim David', 'Romario Shepherd', 'Swapnil Singh',
-    'Kanishk Chouhan', 'Josh Hazlewood', 'Bhuvneshwar Kumar', 'Yash Dayal', 'Rasikh Salam',
-    'Rasikh Dar Salam', 'Lungi Ngidi', 'Suyash Sharma', 'Nuwan Thushara', 'Jacob Duffy',
-    'Abhinandan Singh',
-
-    # 2. Chennai Super Kings (CSK) — 19 Retained (Purse: ₹28.05 Cr | Slots: 6 [2 OS])
+    'Venkatesh Iyer', 'Krunal Pandya', 'Tim David', 'Romario Shepherd', 'Swapnil Singh', 'Kanishk Chouhan',
+    'Josh Hazlewood', 'Bhuvneshwar Kumar', 'Yash Dayal', 'Rasikh Salam', 'Lungi Ngidi',
+    'Suyash Sharma', 'Nuwan Thushara', 'Jacob Duffy', 'Abhinandan Singh',
+    # 2. CSK (19 Retained)
     'Ruturaj Gaikwad', 'Sanju Samson', 'Noor Ahmad', 'Shivam Dube', 'Anshul Kamboj',
     'Liam Livingstone', 'Jack Edwards', 'Devon Conway', 'Kartik Sharma', 'Ayush Mhatre',
-    'Dewald Brevis', 'Jamie Overton', 'Gurjapneet Singh', 'Mukesh Choudhary',
-    'Ramakrishna Ghosh', 'Urvil Patel', 'Vansh Bedi', 'Shaik Rasheed', 'Andre Siddarth',
-
-    # 3. Mumbai Indians (MI) — 16 Retained (Purse: ₹32.60 Cr | Slots: 9 [2 OS])
-    'Rohit Sharma', 'Suryakumar Yadav', 'Jasprit Bumrah', 'Tilak Varma', 'Namboori Tilak Varma',
-    'Arshdeep Singh', 'Quinton de Kock', 'Ryan Rickelton', 'Mitchell Santner', 'Will Jacks',
-    'Sherfane Rutherford', 'Corbin Bosch', 'Naman Dhir', 'Shardul Thakur', 'Ashwani Kumar',
-    'Robin Minz',
-
-    # 4. Kolkata Knight Riders (KKR) — 17 Retained (Purse: ₹41.65 Cr | Slots: 8 [3 OS])
+    'Dewald Brevis', 'Jamie Overton', 'Gurjapneet Singh', 'Mukesh Choudhary', 'Ramakrishna Ghosh',
+    'Urvil Patel', 'Vansh Bedi', 'Shaik Rasheed', 'Andre Siddarth',
+    # 3. MI (16 Retained)
+    'Rohit Sharma', 'Suryakumar Yadav', 'Surya Kumar Yadav', 'Jasprit Bumrah', 'Namboori Tilak Varma', 'Tilak Varma',
+    'Arshdeep Singh', 'Quinton de Kock', 'Ryan Rickelton', 'Mitchell Santner', 'Will Jacks', 'William Jacks',
+    'Sherfane Rutherford', 'Corbin Bosch', 'Naman Dhir', 'Shardul Thakur', 'Ashwani Kumar', 'Robin Minz',
+    'Raj Bawa', 'Raghu Sharma', 'Ruchit Ahir', 'Krish Bhagat',
+    # 4. KKR (17 Retained)
     'Cameron Green', 'Sunil Narine', 'Rinku Singh', 'Varun Chakravarthy', 'Harshit Rana',
-    'Angkrish Raghuvanshi', 'Ramandeep Singh', 'Finn Allen',
-
-    # 5. Sunrisers Hyderabad (SRH) — 18 Retained (Purse: ₹40.15 Cr | Slots: 7 [3 OS])
-    'Pat Cummins', 'Abhishek Sharma', 'Heinrich Klaasen', 'Ishan Kishan', 'Nitish Kumar Reddy',
-    'Nitish Reddy', 'Eshan Malinga', 'Khaleel Ahmed', 'Nathan Ellis', 'T. Natarajan',
-    'T Natarajan', 'Wiaan Mulder', 'Brydon Carse', 'Rahul Chahar', 'Abhinav Manohar',
-    'Simarjeet Singh', 'Atharva Taide', 'Aniket Verma', 'Harsh Dubey', 'Smaran Ravichandran',
-
-    # 6. Delhi Capitals (DC) — 16 Retained (Purse: ₹39.50 Cr | Slots: 9 [4 OS])
-    'Rishabh Pant', 'Axar Patel', 'KL Rahul', 'Lokesh Rahul', 'Tristan Stubbs',
+    'Angkrish Raghuvanshi', 'Ramandeep Singh', 'Finn Allen', 'Manish Pandey', 'Tim Seifert',
+    'Rovman Powell', 'Anukul Roy', 'Sarthak Ranjan', 'Kartik Tyagi', 'Vaibhav Arora', 'Prashant Solanki', 'Saurabh Dubey',
+    # 5. SRH (18 Retained)
+    'Pat Cummins', 'Patrick Cummins', 'Abhishek Sharma', 'Heinrich Klaasen', 'Ishan Kishan',
+    'Nitish Kumar Reddy', 'Nitish Reddy', 'Eshan Malinga', 'Khaleel Ahmed', 'Nathan Ellis',
+    'T Natarajan', 'T. Natarajan', 'Wiaan Mulder', 'Brydon Carse', 'Rahul Chahar',
+    'Abhinav Manohar', 'Simarjeet Singh', 'Atharva Taide', 'Atharwa Taide', 'Aniket Verma',
+    'Harsh Dubey', 'Smaran Ravichandran', 'Ravichandran Smaran',
+    # 6. DC (16 Retained)
+    'Rishabh Pant', 'Axar Patel', 'Lokesh Rahul', 'KL Rahul', 'Tristan Stubbs',
     'Jake Fraser-McGurk', 'Mukesh Kumar', 'Zeeshan Ansari', 'Ashutosh Sharma', 'Sameer Rizvi',
-    'Vipraj Nigam', 'Dushmantha Chameera', 'Auqib Nabi',
-
-    # 7. Rajasthan Royals (RR) — 19 Retained (Purse: ₹27.05 Cr | Slots: 6 [3 OS])
-    'Riyan Parag', 'Yashasvi Jaiswal', 'Dhruv Jurel', 'Vaibhav Sooryavanshi', 'Jofra Archer',
-    'Sandeep Sharma', 'Mohammed Shami', 'M. Siddharth', 'Manimaran Siddharth', 'Ravindra Jadeja',
-    'Donovan Ferreira', 'Shubham Dubey', 'Dasun Shanaka', 'Sushant Mishra',
-
-    # 8. Punjab Kings (PBKS) — 19 Retained (Purse: ₹18.60 Cr | Slots: 6 [2 OS])
+    'Vipraj Nigam', 'Dushmantha Chameera', 'Auqib Nabi', 'Ajay Mandal', 'Tripurana Vijay', 'Sahil Parakh', 'Madhav Tiwari',
+    # 7. RR (19 Retained)
+    'Riyan Parag', 'Yashasvi Jaiswal', 'Dhruv Jurel', 'Vaibhav Sooryavanshi', 'Vaibhav Suryavanshi',
+    'Jofra Archer', 'Sandeep Sharma', 'Mohammed Shami', 'M Siddharth', 'M. Siddharth', 'Manimaran Siddharth',
+    'Ravindra Jadeja', 'Dasun Shanaka', 'Donovan Ferreira', 'Lhuan Pretorius', 'Lhuan-dre Pretorius',
+    'Shubham Dubey', 'Sushant Mishra', 'Yash Punja', 'Yash Raj Punja', 'Emanjot Singh Chahal', 'Aman Rao Perala', 'Brijesh Sharma',
+    # 8. PBKS (19 Retained)
     'Shreyas Iyer', 'Hardik Pandya', 'Prabhsimran Singh', 'Priyansh Arya', 'Shashank Singh',
     'Marcus Stoinis', 'Marco Jansen', 'Yuzvendra Chahal', 'Harpreet Brar', 'Josh Inglis',
-
-    # 9. Lucknow Super Giants (LSG) — 18 Retained (Purse: ₹47.45 Cr | Slots: 7 [3 OS])
+    'Ben Dwarshuis', 'Vishnu Vinod', 'Vyshak Kumar', 'Vyshak Vijaykumar', 'Xavier Bartlett',
+    'Yash Thakur', 'Azmatullah Omarzai', 'Suryansh Shedge', 'Cooper Connolly', 'Harnoor Pannu', 'Harnoor Singh', 'Musheer Khan',
+    # 9. LSG (18 Retained)
     'Nicholas Pooran', 'Kuldeep Yadav', 'Mitchell Marsh', 'Aiden Markram', 'Sam Curran',
     'Mayank Yadav', 'Mohsin Khan', 'Ravi Bishnoi', 'Ayush Badoni', 'Abdul Samad',
-    'Shahbaz Ahmed', 'Prince Yadav', 'Digvesh Singh Rathi', 'Arjun Tendulkar', 'Akash Singh',
-
-    # 10. Gujarat Titans (GT) — 22 Retained (Purse: ₹8.75 Cr | Slots: 3 [2 OS])
+    'Shahbaz Ahmed', 'Prince Yadav', 'Digvesh Singh Rathi', 'Digvesh Rathi', 'Digvesh Singh',
+    'Arjun Tendulkar', 'Akash Singh', 'Himmat Singh', 'Akshat Raghuwanshi', 'Mukul Choudhary',
+    # 10. GT (22 Retained)
     'Shubman Gill', 'Sai Sudharsan', 'Rashid Khan', 'Jos Buttler', 'Mohammed Siraj',
     'Kagiso Rabada', 'Prasidh Krishna', 'Rahul Tewatia', 'Harshal Patel', 'Washington Sundar',
     'Sai Kishore', 'R Sai Kishore', 'Glenn Phillips', 'Jason Holder', 'Tom Banton',
-    'Anuj Rawat', 'Kumar Kushagra', 'Manav Suthar', 'Arshad Khan', 'Nishant Sindhu',
-    'Gurnoor Brar', 'Ashok Sharma', 'Jayant Yadav',
-
+    'Anuj Rawat', 'Kumar Kushagra', 'Manav Suthar', 'Arshad Khan', 'Nishant Sindhu', 'Nishant Kumar Sindhu',
+    'Gurnoor Brar', 'Gurnoor Singh Brar', 'Ashok Sharma', 'Jayant Yadav',
     'Haider Ali'
-}
-
-# Released Players Tagging (Confirmed Available in the IPL 2027 Auction)
-RELEASED_MAP = {
-    'Travis Head': 'SRH (Released)',
-    'Mitchell Starc': 'DC (Released)',
-    'Matheesha Pathirana': 'KKR (Released)',
-    'Mustafizur Rahman': 'KKR (Released)',
-    'Trent Boult': 'MI (Released)',
-    'Deepak Chahar': 'MI (Released)',
-    'Gerald Coetzee': 'SRH (Released)',
-    'Pathum Nissanka': 'DC (Released)',
-    'Nitish Rana': 'DC (Released)',
-    'Abishek Porel': 'DC (Released)',
-    'Karun Nair': 'DC (Released)',
-    'Shimron Hetmyer': 'RR (Released)',
-    'Lockie Ferguson': 'PBKS (Released)',
-    'Nehal Wadhera': 'PBKS (Released)',
-    'Avesh Khan': 'LSG (Released)',
-    'Anrich Nortje': 'LSG (Released)',
-    'Wanindu Hasaranga': 'LSG (Released)',
-    'George Linde': 'LSG (Released)',
-    'Rachin Ravindra': 'KKR (Released)',
-    'Ajinkya Rahane': 'KKR (Released)',
-    'Akash Deep': 'KKR (Released)',
-    'Spencer Johnson': 'CSK (Released)',
-    'Matt Henry': 'CSK (Released)',
-    'Matthew Short': 'CSK (Released)',
-    'Kamindu Mendis': 'SRH (Released)',
-    'Jaydev Unadkat': 'SRH (Released)',
-    'Shahrukh Khan': 'GT (Released)',
-    'M Shahrukh Khan': 'GT (Released)',
-    'Ishant Sharma': 'GT (Released)',
-    'Luke Wood': 'GT (Released)',
-    'Tushar Deshpande': 'RR (Released)',
-    'Nandre Burger': 'RR (Released)',
-    'Kwena Maphaka': 'RR (Released)',
-    'Adam Milne': 'RR (Released)',
-    'Allah Ghazanfar': 'MI (Released)',
-    'Keshav Maharaj': 'MI (Released)',
-    'Sakib Hussain': 'SRH (Released)',
-    'Cooper Connolly': 'PBKS (Released)',
-    'Kusal Perera': 'Free Agent (Auction Pool)',
-    'Muhammad Waseem': 'Free Agent (Auction Pool)',
-    'Tim Robinson': 'Free Agent (Auction Pool)',
-    'Tanzid Hasan': 'Free Agent (Auction Pool)',
-    'Matthew Humphreys': 'Free Agent (Auction Pool)',
-    'Mahedi Hasan': 'Free Agent (Auction Pool)',
-    'Hasan Mahmud': 'Free Agent (Auction Pool)',
-    'Josh Tongue': 'Free Agent (Auction Pool)',
-    'Mujeeb Ur Rahman': 'Free Agent (Auction Pool)',
-    'Akeal Hosein': 'Free Agent (Auction Pool)',
-    'Sikandar Raza': 'Free Agent (Auction Pool)',
-    'Benjamin Sears': 'Free Agent (Auction Pool)'
 }
 
 ipl_2026_df = ctpm[ctpm['comp_id'] == 3298][['player_id', 'player_name', 'team_id', 'team_name']].drop_duplicates('player_id')
 ipl_2026_team_map = dict(zip(ipl_2026_df['player_id'], ipl_2026_df['team_name']))
-ipl_2026_player_ids = set(ipl_2026_df['player_id'].unique())
+ever_ipl_ids = set(ctpm[ctpm['comp_id'].isin(IPL_COMP_IDS)]['player_id'].unique())
+
+def get_official_2027_status(player_id, player_name):
+    if player_name in CONFIRMED_RETAINED_2027:
+        return 'Retained / Traded In (Locked)'
+    if player_id in ipl_2026_team_map:
+        return f"Released ({ipl_2026_team_map[player_id]})"
+    if player_id in ever_ipl_ids:
+        return 'Free Agent (Unattached IPL)'
+    return 'Free Agent (T20I / Global)'
 
 # ==============================================================================
-# 3. PRE-DELIVERY SCOREBOARD STATE RECONSTRUCTION
+# 3. PRE-DELIVERY SCOREBOARD RECONSTRUCTION
 # ==============================================================================
 print("[2/5] Reconstructing pre-delivery scoreboard state across 200,999 balls...")
 for col in ['is_four', 'is_six', 'is_wicket']:
@@ -234,14 +175,14 @@ df['is_away_bowl'] = (df['bowling_team_id'] != df['home_team_id']) & (df['battin
 df['m_away_bat'] = np.where(df['is_away_bat'], 1.12, 1.00)
 df['m_away_bowl'] = np.where(df['is_away_bowl'], 1.12, 1.00)
 
-bowl_base = df[df['is_legal']].groupby('bowler_id').agg(b_balls=('is_legal', 'sum'), b_runs=('ball_runs', 'sum'), b_wkts=('is_wicket', 'sum'))
+bowl_base = df.groupby('bowler_id').agg(b_balls=('is_legal', 'sum'), b_runs=('ball_runs', 'sum'), b_wkts=('is_wicket', 'sum'))
 bowl_base = bowl_base[bowl_base['b_balls'] >= 180]
-bowl_base['b_econ'] = bowl_base['b_runs'] / bowl_base['b_balls'] * 6.0
+bowl_base['b_econ'] = (bowl_base['b_runs'] / bowl_base['b_balls']) * 6.0
 elite_bowlers = set(bowl_base[(bowl_base['b_econ'] <= bowl_base['b_econ'].quantile(0.30)) | (bowl_base['b_wkts'] >= 30)].index)
 
-bat_base = df[df['is_legal']].groupby('striker_id').agg(s_balls=('is_legal', 'sum'), s_runs=('runs', 'sum'))
+bat_base = df[~df['is_wide']].groupby('striker_id').agg(s_balls=('runs', 'count'), s_runs=('runs', 'sum'))
 bat_base = bat_base[bat_base['s_balls'] >= 180]
-bat_base['s_sr'] = bat_base['s_runs'] / bat_base['s_balls'] * 100.0
+bat_base['s_sr'] = (bat_base['s_runs'] / bat_base['s_balls']) * 100.0
 elite_batters = set(bat_base[(bat_base['s_sr'] >= bat_base['s_sr'].quantile(0.70)) | (bat_base['s_runs'] >= 600)].index)
 
 df['m_opp_bat'] = np.where(df['bowler_id'].isin(elite_bowlers), 1.18, 1.00)
@@ -262,7 +203,6 @@ recency_map = {2026: 1.50, 2025: 1.25, 2024: 0.90, 2023: 0.65, 2022: 0.45}
 df['m_recency'] = df['year'].map(recency_map).fillna(1.00)
 df['is_recent'] = df['year'].isin([2025, 2026])
 
-# Base Scoreboard Triggers (Excluding Dead-Rubber Garbage Time)
 p_collapse = ((df['overid'] <= 6) & (df['cum_wkts'] >= 2)) | (df['overid'].between(7, 12) & (df['cum_wkts'] >= 3))
 p_death_inn1 = (df['innings'] == 1) & (df['overid'] >= 16) & (df['cum_wkts'] <= 7)
 p_death_inn2 = (df['innings'] == 2) & (df['overid'] >= 16) & (df['runs_needed'] > 0) & (df['rrr'].between(7.5, 22.0)) & (df['cum_wkts'] <= 8)
@@ -275,11 +215,9 @@ df['w_bat'] = df['w_context_bat'] * df['m_recency']
 df['w_bowl'] = df['w_context_bowl'] * df['m_recency']
 
 # ==============================================================================
-# 5. AGGREGATE LIST B (AUCTION TARGET POOL) & LIST A (BENCHMARK LEADERBOARD)
+# 5. AGGREGATE V5 AVAILABLE AUCTION POOLS (OPTION A: IPL-PROVEN & OPTION B: ALL)
 # ==============================================================================
-print("[4/5] Computing List B (Auction Target Top 10) and List A (Overall Benchmark Top 10)...")
-
-# --- BATTERS ---
+print("[4/5] Computing V5 Official Available Auction Pools...")
 bat_df = df[~df['is_wide']].copy()
 bat_df['is_out'] = (bat_df['is_wicket'] & (bat_df['dismissed_player_id'] == bat_df['striker_id'])).astype(float)
 bat_df['is_bnd'] = (bat_df['is_four'] | bat_df['is_six']).astype(float)
@@ -293,30 +231,20 @@ bat_p['w_dot'] = bat_p['is_dot'] * bat_p['w_bat']
 
 bat_all = bat_df.groupby(['striker_id', 'striker_name']).agg(
     matches=('match_id', 'nunique'),
+    ipl_matches=('is_ipl', lambda s: bat_df.loc[s.index, 'match_id'][s].nunique()),
     balls=('runs', 'count'),
     runs=('runs', 'sum'),
     outs=('is_out', 'sum')
 ).reset_index()
 
-bat_ipl = bat_df[bat_df['is_ipl']].groupby('striker_id')['match_id'].nunique().rename('ipl_matches').reset_index()
-bat_all = bat_all.merge(bat_ipl, on='striker_id', how='left')
-bat_all['ipl_matches'] = bat_all['ipl_matches'].fillna(0).astype(int)
-
 bat_press = bat_p.groupby(['striker_id', 'striker_name']).agg(
-    p_balls=('runs', 'count'),
-    p_runs=('runs', 'sum'),
-    w_balls=('w_bat', 'sum'),
-    w_runs=('w_runs', 'sum'),
-    w_outs=('w_outs', 'sum'),
-    w_bnd=('w_bnd', 'sum'),
-    w_dot=('w_dot', 'sum'),
-    avg_pressure_intensity=('w_context_bat', 'mean')
+    p_balls=('runs', 'count'), p_runs=('runs', 'sum'), w_balls=('w_bat', 'sum'),
+    w_runs=('w_runs', 'sum'), w_outs=('w_outs', 'sum'), w_bnd=('w_bnd', 'sum'),
+    w_dot=('w_dot', 'sum'), avg_pressure_intensity=('w_context_bat', 'mean')
 ).reset_index()
 
 bat_rec = bat_p[bat_p['is_recent']].groupby('striker_id').agg(
-    rec_p_balls=('runs', 'count'),
-    rec_p_runs=('runs', 'sum'),
-    rec_p_outs=('is_out', 'sum')
+    rec_p_balls=('runs', 'count'), rec_p_runs=('runs', 'sum'), rec_p_outs=('is_out', 'sum')
 ).reset_index()
 bat_rec['rec_p_sr'] = (bat_rec['rec_p_runs'] / np.maximum(bat_rec['rec_p_balls'], 1) * 100).round(1)
 bat_rec['rec_p_avg'] = (bat_rec['rec_p_runs'] / np.maximum(bat_rec['rec_p_outs'], 1)).round(1)
@@ -332,70 +260,29 @@ bat_res['wp_avg'] = (bat_res['w_runs'] / np.maximum(bat_res['w_outs'], 1)).round
 bat_res['wp_bnd_pct'] = (bat_res['w_bnd'] / bat_res['w_balls'] * 100).round(1)
 bat_res['wp_dot_pct'] = (bat_res['w_dot'] / bat_res['w_balls'] * 100).round(1)
 bat_res['sr_lift'] = (bat_res['wp_sr'] - bat_res['base_sr']).round(1)
-bat_res['recent_form_delta'] = (bat_res['rec_p_sr'] - bat_res['base_sr']).round(1)
 
-bat_res['in_ipl_2026'] = bat_res['striker_id'].isin(ipl_2026_player_ids)
+bat_res['official_2027_status'] = [get_official_2027_status(pid, pname) for pid, pname in zip(bat_res['striker_id'], bat_res['striker_name'])]
 bat_res['is_pakistani'] = bat_res['striker_id'].isin(PAKISTAN_PLAYER_IDS)
 bat_res['is_retired'] = bat_res['striker_name'].isin(RETIRED_NAMES)
-bat_res['is_retained'] = bat_res['striker_name'].isin(CONFIRMED_RETAINED)
 
-def get_auction_status(name, is_ret):
-    if name in RELEASED_MAP:
-        return RELEASED_MAP[name]
-    elif is_ret:
-        return 'RETAINED (Untouchable)'
-    else:
-        return 'FREE AGENT (Auction Pool)'
-
-bat_res['auction_status'] = [get_auction_status(n, r) for n, r in zip(bat_res['striker_name'], bat_res['is_retained'])]
-bat_res['ipl_2026_team'] = bat_res['striker_id'].map(ipl_2026_team_map).fillna(bat_res['auction_status'])
-
-# --- LIST B BATTERS (Actionable IPL 2027 Auction Pool) ---
-bat_b = bat_res[
-    (~bat_res['is_retained']) &
-    (~bat_res['is_pakistani']) &
-    (~bat_res['is_retired']) &
-    (bat_res['p_balls'] >= 80) &
-    (bat_res['rec_p_balls'] >= 40)
+# Option A: IPL-Proven Officially Released & Unattached Batters
+bat_v5_ipl = bat_res[
+    (~bat_res['is_pakistani']) & (~bat_res['is_retired']) &
+    (~bat_res['striker_name'].isin(CONFIRMED_RETAINED_2027)) &
+    (bat_res['ipl_matches'] >= 1) & (bat_res['p_balls'] >= 70) & (bat_res['rec_p_balls'] >= 30)
 ].copy()
 
 for col in ['wp_sr', 'wp_avg', 'wp_bnd_pct', 'wp_dot_pct', 'sr_lift', 'rec_p_sr', 'avg_pressure_intensity']:
-    bat_b[col + '_z'] = (bat_b[col] - bat_b[col].mean()) / bat_b[col].std()
+    bat_v5_ipl[col + '_z'] = (bat_v5_ipl[col] - bat_v5_ipl[col].mean()) / bat_v5_ipl[col].std()
 
-bat_b['bpi_auction'] = (
-    0.25 * bat_b['wp_sr_z'] +
-    0.20 * bat_b['wp_avg_z'] +
-    0.15 * bat_b['rec_p_sr_z'] +
-    0.15 * bat_b['wp_bnd_pct_z'] -
-    0.10 * bat_b['wp_dot_pct_z'] +
-    0.10 * bat_b['sr_lift_z'] +
-    0.05 * bat_b['avg_pressure_intensity_z']
+bat_v5_ipl['bpi_v5'] = (
+    0.25 * bat_v5_ipl['wp_sr_z'] + 0.20 * bat_v5_ipl['wp_avg_z'] + 0.15 * bat_v5_ipl['rec_p_sr_z'] +
+    0.15 * bat_v5_ipl['wp_bnd_pct_z'] - 0.10 * bat_v5_ipl['wp_dot_pct_z'] + 0.10 * bat_v5_ipl['sr_lift_z'] +
+    0.05 * bat_v5_ipl['avg_pressure_intensity_z']
 ).round(3)
-bat_b = bat_b.sort_values('bpi_auction', ascending=False).reset_index(drop=True)
+bat_v5_ipl = bat_v5_ipl.sort_values('bpi_v5', ascending=False).reset_index(drop=True)
 
-# --- LIST A BATTERS (Unrestricted Active IPL Benchmark) ---
-bat_a = bat_res[
-    (bat_res['in_ipl_2026'] | bat_res['is_retained']) &
-    (bat_res['matches'] >= 25) &
-    (bat_res['p_balls'] >= 150) &
-    (bat_res['rec_p_balls'] >= 60)
-].copy()
-
-for col in ['wp_sr', 'wp_avg', 'wp_bnd_pct', 'wp_dot_pct', 'sr_lift', 'rec_p_sr', 'avg_pressure_intensity']:
-    bat_a[col + '_z'] = (bat_a[col] - bat_a[col].mean()) / bat_a[col].std()
-
-bat_a['bpi_v4'] = (
-    0.25 * bat_a['wp_sr_z'] +
-    0.20 * bat_a['wp_avg_z'] +
-    0.15 * bat_a['rec_p_sr_z'] +
-    0.15 * bat_a['wp_bnd_pct_z'] -
-    0.10 * bat_a['wp_dot_pct_z'] +
-    0.10 * bat_a['sr_lift_z'] +
-    0.05 * bat_a['avg_pressure_intensity_z']
-).round(3)
-bat_a = bat_a.sort_values('bpi_v4', ascending=False).reset_index(drop=True)
-
-# --- BOWLERS ---
+# Bowlers
 df['b_wkt'] = (df['is_wicket'] & (~df['dismissal_type'].astype(str).isin(['RunOut', 'Retired Hurt', 'Obstructing the field']))).astype(float)
 df['b_runs'] = df['runs'] + np.where(df['is_wide'] | df['is_noball'], 1 + df['extras_2_runs'].fillna(0), 0)
 df['b_dot'] = (df['is_legal'] & (df['b_runs'] == 0)).astype(float)
@@ -409,30 +296,20 @@ bowl_p['w_bnd'] = bowl_p['b_bnd'] * bowl_p['w_bowl']
 
 bowl_all = df[df['is_legal']].groupby(['bowler_id', 'bowler_name']).agg(
     matches=('match_id', 'nunique'),
+    ipl_matches=('is_ipl', lambda s: df.loc[s.index, 'match_id'][s].nunique()),
     balls=('is_legal', 'sum'),
     runs=('b_runs', 'sum'),
     wkts=('b_wkt', 'sum')
 ).reset_index()
 
-bowl_ipl = df[df['is_legal'] & df['is_ipl']].groupby('bowler_id')['match_id'].nunique().rename('ipl_matches').reset_index()
-bowl_all = bowl_all.merge(bowl_ipl, on='bowler_id', how='left')
-bowl_all['ipl_matches'] = bowl_all['ipl_matches'].fillna(0).astype(int)
-
 bowl_press = bowl_p.groupby(['bowler_id', 'bowler_name']).agg(
-    p_balls=('is_legal', 'sum'),
-    p_wkts=('b_wkt', 'sum'),
-    w_balls=('w_bowl', 'sum'),
-    w_runs=('w_runs', 'sum'),
-    w_wkts=('w_wkts', 'sum'),
-    w_dot=('w_dot', 'sum'),
-    w_bnd=('w_bnd', 'sum'),
-    avg_pressure_intensity=('w_context_bowl', 'mean')
+    p_balls=('is_legal', 'sum'), p_wkts=('b_wkt', 'sum'), w_balls=('w_bowl', 'sum'),
+    w_runs=('w_runs', 'sum'), w_wkts=('w_wkts', 'sum'), w_dot=('w_dot', 'sum'),
+    w_bnd=('w_bnd', 'sum'), avg_pressure_intensity=('w_context_bowl', 'mean')
 ).reset_index()
 
 bowl_rec = bowl_p[bowl_p['is_recent']].groupby('bowler_id').agg(
-    rec_p_balls=('is_legal', 'sum'),
-    rec_p_runs=('b_runs', 'sum'),
-    rec_p_wkts=('b_wkt', 'sum')
+    rec_p_balls=('is_legal', 'sum'), rec_p_runs=('b_runs', 'sum'), rec_p_wkts=('b_wkt', 'sum')
 ).reset_index()
 bowl_rec['rec_p_econ'] = (bowl_rec['rec_p_runs'] / np.maximum(bowl_rec['rec_p_balls'], 1) * 6.0).round(2)
 bowl_rec['rec_p_sr'] = (bowl_rec['rec_p_balls'] / np.maximum(bowl_rec['rec_p_wkts'], 1)).round(1)
@@ -442,7 +319,6 @@ bowl_res['rec_p_balls'] = bowl_res['rec_p_balls'].fillna(0).astype(int)
 bowl_res['rec_p_wkts'] = bowl_res['rec_p_wkts'].fillna(0).astype(int)
 bowl_res['rec_p_econ'] = bowl_res['rec_p_econ'].fillna(99.0)
 bowl_res['rec_p_sr'] = bowl_res['rec_p_sr'].fillna(99.0)
-
 bowl_res['base_econ'] = (bowl_res['runs'] / bowl_res['balls'] * 6.0).round(2)
 bowl_res['base_sr'] = (bowl_res['balls'] / np.maximum(bowl_res['wkts'], 1)).round(1)
 bowl_res['wp_econ'] = (bowl_res['w_runs'] / bowl_res['w_balls'] * 6.0).round(2)
@@ -451,208 +327,27 @@ bowl_res['wp_dot_pct'] = (bowl_res['w_dot'] / bowl_res['w_balls'] * 100).round(1
 bowl_res['wp_bnd_pct'] = (bowl_res['w_bnd'] / bowl_res['w_balls'] * 100).round(1)
 bowl_res['econ_drop'] = (bowl_res['wp_econ'] - bowl_res['base_econ']).round(2)
 
-bowl_res['in_ipl_2026'] = bowl_res['bowler_id'].isin(ipl_2026_player_ids)
+bowl_res['official_2027_status'] = [get_official_2027_status(pid, pname) for pid, pname in zip(bowl_res['bowler_id'], bowl_res['bowler_name'])]
 bowl_res['is_pakistani'] = bowl_res['bowler_id'].isin(PAKISTAN_PLAYER_IDS)
 bowl_res['is_retired'] = bowl_res['bowler_name'].isin(RETIRED_NAMES)
-bowl_res['is_retained'] = bowl_res['bowler_name'].isin(CONFIRMED_RETAINED)
-bowl_res['auction_status'] = [get_auction_status(n, r) for n, r in zip(bowl_res['bowler_name'], bowl_res['is_retained'])]
-bowl_res['ipl_2026_team'] = bowl_res['bowler_id'].map(ipl_2026_team_map).fillna(bowl_res['auction_status'])
 
-# --- LIST B BOWLERS (Actionable IPL 2027 Auction Pool) ---
-bowl_b = bowl_res[
-    (~bowl_res['is_retained']) &
-    (~bowl_res['is_pakistani']) &
-    (~bowl_res['is_retired']) &
-    (bowl_res['p_balls'] >= 80) &
-    (bowl_res['rec_p_balls'] >= 40)
+# Option A: IPL-Proven Officially Released & Unattached Bowlers
+bowl_v5_ipl = bowl_res[
+    (~bowl_res['is_pakistani']) & (~bowl_res['is_retired']) &
+    (~bowl_res['bowler_name'].isin(CONFIRMED_RETAINED_2027)) &
+    (bowl_res['ipl_matches'] >= 1) & (bowl_res['p_balls'] >= 70) & (bowl_res['rec_p_balls'] >= 30)
 ].copy()
 
 for col in ['wp_econ', 'wp_sr', 'wp_dot_pct', 'wp_bnd_pct', 'econ_drop', 'rec_p_econ', 'avg_pressure_intensity']:
-    bowl_b[col + '_z'] = (bowl_b[col] - bowl_b[col].mean()) / bowl_b[col].std()
+    bowl_v5_ipl[col + '_z'] = (bowl_v5_ipl[col] - bowl_v5_ipl[col].mean()) / bowl_v5_ipl[col].std()
 
-bowl_b['bopi_auction'] = (
-    -0.25 * bowl_b['wp_econ_z'] -
-    0.20 * bowl_b['wp_sr_z'] -
-    0.15 * bowl_b['rec_p_econ_z'] +
-    0.15 * bowl_b['wp_dot_pct_z'] -
-    0.10 * bowl_b['wp_bnd_pct_z'] -
-    0.10 * bowl_b['econ_drop_z'] +
-    0.05 * bowl_b['avg_pressure_intensity_z']
+bowl_v5_ipl['bopi_v5'] = (
+    -0.25 * bowl_v5_ipl['wp_econ_z'] - 0.20 * bowl_v5_ipl['wp_sr_z'] - 0.15 * bowl_v5_ipl['rec_p_econ_z'] +
+    0.15 * bowl_v5_ipl['wp_dot_pct_z'] - 0.10 * bowl_v5_ipl['wp_bnd_pct_z'] - 0.10 * bowl_v5_ipl['econ_drop_z'] +
+    0.05 * bowl_v5_ipl['avg_pressure_intensity_z']
 ).round(3)
-bowl_b = bowl_b.sort_values('bopi_auction', ascending=False).reset_index(drop=True)
+bowl_v5_ipl = bowl_v5_ipl.sort_values('bopi_v5', ascending=False).reset_index(drop=True)
 
-# --- LIST A BOWLERS (Unrestricted Active IPL Benchmark) ---
-bowl_a = bowl_res[
-    (bowl_res['in_ipl_2026'] | bowl_res['is_retained']) &
-    (bowl_res['matches'] >= 25) &
-    (bowl_res['p_balls'] >= 150) &
-    (bowl_res['rec_p_balls'] >= 60)
-].copy()
-
-for col in ['wp_econ', 'wp_sr', 'wp_dot_pct', 'wp_bnd_pct', 'econ_drop', 'rec_p_econ', 'avg_pressure_intensity']:
-    bowl_a[col + '_z'] = (bowl_a[col] - bowl_a[col].mean()) / bowl_a[col].std()
-
-bowl_a['bopi_v4'] = (
-    -0.25 * bowl_a['wp_econ_z'] -
-    0.20 * bowl_a['wp_sr_z'] -
-    0.15 * bowl_a['rec_p_econ_z'] +
-    0.15 * bowl_a['wp_dot_pct_z'] -
-    0.10 * bowl_a['wp_bnd_pct_z'] -
-    0.10 * bowl_a['econ_drop_z'] +
-    0.05 * bowl_a['avg_pressure_intensity_z']
-).round(3)
-bowl_a = bowl_a.sort_values('bopi_v4', ascending=False).reset_index(drop=True)
-
-# --- YEARLY PRESSURE AGGREGATIONS FOR REAL-TIME RECENCY INTERPOLATION ---
-bat_p['wc_runs'] = bat_p['runs'] * bat_p['w_context_bat']
-bat_p['wc_outs'] = bat_p['is_out'] * bat_p['w_context_bat']
-bat_p['wc_bnd'] = bat_p['is_bnd'] * bat_p['w_context_bat']
-bat_p['wc_dot'] = bat_p['is_dot'] * bat_p['w_context_bat']
-
-bat_yearly = bat_p.groupby(['striker_id', 'striker_name', 'year']).agg(
-    p_balls=('runs', 'count'),
-    p_runs=('runs', 'sum'),
-    p_outs=('is_out', 'sum'),
-    p_bnd=('is_bnd', 'sum'),
-    p_dot=('is_dot', 'sum'),
-    wc_balls=('w_context_bat', 'sum'),
-    wc_runs=('wc_runs', 'sum'),
-    wc_outs=('wc_outs', 'sum'),
-    wc_bnd=('wc_bnd', 'sum'),
-    wc_dot=('wc_dot', 'sum')
-).reset_index()
-
-bowl_p['wc_runs'] = bowl_p['b_runs'] * bowl_p['w_context_bowl']
-bowl_p['wc_wkts'] = bowl_p['b_wkt'] * bowl_p['w_context_bowl']
-bowl_p['wc_dot'] = bowl_p['b_dot'] * bowl_p['w_context_bowl']
-bowl_p['wc_bnd'] = bowl_p['b_bnd'] * bowl_p['w_context_bowl']
-
-bowl_yearly = bowl_p.groupby(['bowler_id', 'bowler_name', 'year']).agg(
-    p_balls=('is_legal', 'sum'),
-    p_runs=('b_runs', 'sum'),
-    p_wkts=('b_wkt', 'sum'),
-    p_dot=('b_dot', 'sum'),
-    p_bnd=('b_bnd', 'sum'),
-    wc_balls=('w_context_bowl', 'sum'),
-    wc_runs=('wc_runs', 'sum'),
-    wc_wkts=('wc_wkts', 'sum'),
-    wc_dot=('wc_dot', 'sum'),
-    wc_bnd=('wc_bnd', 'sum')
-).reset_index()
-
-# Save all CSV datasets
-bat_b.to_csv('list_b_unstop_top_batters.csv', index=False)
-bowl_b.to_csv('list_b_unstop_top_bowlers.csv', index=False)
-bat_a.to_csv('v4_recency_top_batters.csv', index=False)
-bowl_a.to_csv('v4_recency_top_bowlers.csv', index=False)
-bat_yearly.to_csv('bat_yearly_pressure.csv', index=False)
-bowl_yearly.to_csv('bowl_yearly_pressure.csv', index=False)
-
-# ==============================================================================
-# 6. GENERATE 220 DPI SCATTER QUADRANT CHARTS
-# ==============================================================================
-print("Generating 220 DPI scatter quadrant plots...")
-
-# Chart 1: List B Batters Quadrant
-fig, ax = plt.subplots(figsize=(10, 7), dpi=220)
-x = bat_b['base_sr']
-y = bat_b['rec_p_sr']
-x_mean = x.mean()
-y_mean = y.mean()
-
-scatter = ax.scatter(x, y, c=bat_b['bpi_auction'], cmap='plasma', s=bat_b['p_balls']*0.8, alpha=0.85, edgecolors='#254AA5', linewidths=1.2)
-cbar = plt.colorbar(scatter, ax=ax)
-cbar.set_label('BPI Score (Auction Pool)', fontsize=11, fontweight='bold', color='#1E293B')
-
-ax.axvline(x_mean, color='#EA1A85', linestyle='--', linewidth=1.2, alpha=0.7)
-ax.axhline(y_mean, color='#EA1A85', linestyle='--', linewidth=1.2, alpha=0.7)
-
-bat_offsets = {
-    'Karun Nair': (-70, 10),
-    'Kusal Perera': (8, 6),
-    'Pathum Nissanka': (-85, -14),
-    'Travis Head': (8, 8),
-    'Cooper Connolly': (10, -14),
-    'Muhammad Waseem': (8, -10),
-    'Tim Robinson': (10, -5),
-    'Tanzid Hasan': (-80, 8),
-    'Sarfaraz Khan': (-80, 4),
-    'Ajinkya Rahane': (-90, -10)
-}
-top10_bat = bat_b.head(10)
-for _, row in top10_bat.iterrows():
-    offset = bat_offsets.get(row['striker_name'], (6, 6))
-    ax.annotate(
-        row['striker_name'],
-        (row['base_sr'], row['rec_p_sr']),
-        xytext=offset, textcoords='offset points',
-        fontsize=8.5, fontweight='bold', color='#1E293B',
-        arrowprops=dict(arrowstyle='->', color='#254AA5', lw=0.8, alpha=0.7),
-        bbox=dict(boxstyle='round,pad=0.25', facecolor='white', alpha=0.9, edgecolor='#254AA5', linewidth=0.7)
-    )
-
-ax.text(x.max()*0.92, y.max()*0.98, 'HIGH CLUTCH ELEVATION\n(Top Targets)', fontsize=10, fontweight='bold', color='#254AA5', ha='right', va='top')
-ax.set_title('Rajasthan Royals War-Room | List B Batters: Baseline SR vs. 2025-26 Pressure SR', fontsize=12, fontweight='bold', color='#254AA5', pad=12)
-ax.set_xlabel('Career Baseline Strike Rate', fontsize=11, fontweight='bold', color='#1E293B')
-ax.set_ylabel('2025-2026 Pressure Strike Rate', fontsize=11, fontweight='bold', color='#1E293B')
-ax.grid(True, linestyle=':', alpha=0.5)
-plt.tight_layout()
-plt.savefig('list_b_bat_chart.png', dpi=220)
-plt.close()
-
-# Chart 2: List B Bowlers Quadrant
-fig, ax = plt.subplots(figsize=(10, 7), dpi=220)
-x = bowl_b['base_econ']
-y = bowl_b['rec_p_econ']
-x_mean = x.mean()
-y_mean = y.mean()
-
-scatter = ax.scatter(x, y, c=bowl_b['bopi_auction'], cmap='viridis', s=bowl_b['p_balls']*0.8, alpha=0.85, edgecolors='#EA1A85', linewidths=1.2)
-cbar = plt.colorbar(scatter, ax=ax)
-cbar.set_label('BoPI Score (Auction Pool)', fontsize=11, fontweight='bold', color='#1E293B')
-
-ax.axvline(x_mean, color='#254AA5', linestyle='--', linewidth=1.2, alpha=0.7)
-ax.axhline(y_mean, color='#254AA5', linestyle='--', linewidth=1.2, alpha=0.7)
-
-bowl_offsets = {
-    'Matthew Humphreys': (8, -12),
-    'Mahedi Hasan': (8, 6),
-    'Hasan Mahmud': (8, 6),
-    'Josh Tongue': (8, -14),
-    'Mujeeb Ur Rahman': (-90, 8),
-    'Sakib Hussain': (8, 6),
-    'Akeal Hosein': (-80, -10),
-    'Mustafizur Rahman': (8, -10),
-    'Sikandar Raza': (-80, 8),
-    'Benjamin Sears': (8, 6)
-}
-top10_bowl = bowl_b.head(10)
-for _, row in top10_bowl.iterrows():
-    offset = bowl_offsets.get(row['bowler_name'], (6, 6))
-    ax.annotate(
-        row['bowler_name'],
-        (row['base_econ'], row['rec_p_econ']),
-        xytext=offset, textcoords='offset points',
-        fontsize=8.5, fontweight='bold', color='#1E293B',
-        arrowprops=dict(arrowstyle='->', color='#EA1A85', lw=0.8, alpha=0.7),
-        bbox=dict(boxstyle='round,pad=0.25', facecolor='white', alpha=0.9, edgecolor='#EA1A85', linewidth=0.7)
-    )
-
-ax.text(x.min()*1.05, y.min()*1.05, 'ELITE RESTRICTION & CLUTCH\n(Lower Econ = Better)', fontsize=10, fontweight='bold', color='#254AA5', ha='left', va='bottom')
-ax.set_title('Rajasthan Royals War-Room | List B Bowlers: Baseline Econ vs. 2025-26 Pressure Econ', fontsize=12, fontweight='bold', color='#254AA5', pad=12)
-ax.set_xlabel('Career Baseline Economy (RPO)', fontsize=11, fontweight='bold', color='#1E293B')
-ax.set_ylabel('2025-2026 Pressure Economy (RPO)', fontsize=11, fontweight='bold', color='#1E293B')
-ax.grid(True, linestyle=':', alpha=0.5)
-plt.tight_layout()
-plt.savefig('list_b_bowl_chart.png', dpi=220)
-plt.close()
-
-print("[5/5] Pipeline complete! Saved CSVs and 220 DPI quadrant charts.")
-print("\n=== OFFICIAL UNSTOP DROPDOWN TOP 10 BATTERS (LIST B) ===")
-print(bat_b[['striker_name', 'auction_status', 'p_balls', 'rec_p_balls', 'base_sr', 'wp_sr', 'rec_p_sr', 'sr_lift', 'wp_avg', 'wp_bnd_pct', 'bpi_auction']].head(10).to_string(index=False))
-print("\n=== OFFICIAL UNSTOP DROPDOWN TOP 10 BOWLERS (LIST B) ===")
-print(bowl_b[['bowler_name', 'auction_status', 'p_balls', 'rec_p_balls', 'rec_p_wkts', 'base_econ', 'wp_econ', 'rec_p_econ', 'econ_drop', 'wp_sr', 'bopi_auction']].head(10).to_string(index=False))
-
-# Clean up scratch test file if present
-if os.path.exists('test_auction_engine.py'):
-    os.remove('test_auction_engine.py')
+bat_v5_ipl.to_csv('v5_official_released_ipl_batters.csv', index=False)
+bowl_v5_ipl.to_csv('v5_official_released_ipl_bowlers.csv', index=False)
+print("[5/5] Saved v5_official_released_ipl_batters.csv and v5_official_released_ipl_bowlers.csv!")

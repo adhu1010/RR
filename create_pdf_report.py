@@ -368,7 +368,7 @@ def build_pdf_report():
     story.append(Paragraph(
         "<i>Key Bowling Insight: <b>Mujeeb Ur Rahman</b> (6.89 pressure econ) and <b>Sakib Hussain</b> (7.65 recent pressure econ, -1.11 drop) "
         "lead the released auction pool. <b>Mustafizur Rahman</b> (KKR Rel) recorded 22 pressure wickets at an extraordinary 5.56 RPO in 2025–2026, "
-        "while <b>Matheesha Pathirana</b> (#7, KKR Rel) brings 51 career pressure wickets and an elite 16.3% boundary restriction.</i>",
+        "while <b>Praful Hinge</b> (#7, SRH Rel) provides a massive -1.47 RPO economy drop under pressure with a lethal 9.1 strike rate.</i>",
         body_style
     ))
     story.append(Spacer(1, 5))
@@ -552,8 +552,8 @@ def build_pdf_report():
         "(-1.11 drop) with a lethal 13.0 strike rate and 10 recent pressure wickets.<br/>"
         "&bull; <b>Mustafizur Rahman (KKR Released):</b> BoPI Score of <b>+0.927</b>. Claimed 22 pressure wickets in 2025–2026 at an extraordinary <b>5.56 RPO economy</b>, "
         "making him the premier death-overs cutter specialist in the auction pool.<br/>"
-        "&bull; <b>Matheesha Pathirana (KKR Released):</b> BoPI Score of <b>+0.555</b>. Features 51 career pressure wickets with an elite 16.3% boundary restriction, "
-        "providing Rajasthan Royals with an express sling-arm death bowling enforcer to partner Jofra Archer.",
+        "&bull; <b>Praful Hinge (SRH Released):</b> BoPI Score of <b>+0.716</b>. Tightens economy from 11.06 baseline to 9.59 under pressure (-1.47 drop) "
+        "with 8 recent pressure wickets at an explosive 9.1 strike rate, representing elite ₹30L domestic steal value.",
         body_style
     ))
     story.append(Spacer(1, 5))

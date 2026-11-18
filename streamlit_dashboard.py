@@ -686,8 +686,8 @@ with tab_warroom:
             "Slot #": "Slot 6 (IND #3)",
             "Target Role (Replacing Released RR Player)": "Uncapped Death/PP Pacer (Replaces Deshpande / Sen)",
             "Primary Target": "Sakib Hussain (Rel. SRH)",
-            "Backup Target": "Akash Madhwal / Gurjapneet Singh",
-            "Key Pressure Metric (V5)": "Sakib: 7.65 Rec Econ (-1.11 RPO Drop)",
+            "Backup Target": "Praful Hinge / Akash Madhwal",
+            "Key Pressure Metric (V5)": "Sakib: 7.65 Rec Econ (-1.11 RPO Drop) | Hinge: -1.47 Drop",
             "Target Bid Cap": "₹0.30 Cr – ₹0.80 Cr"
         }
     ])
@@ -707,8 +707,8 @@ with tab_warroom:
             ("8. Wanindu Hasaranga / Akeal Hosein", "Auction Target (OS): Attacking Leg-Spinner / Bowling All-Rounder"),
             ("9. Jofra Archer (OS)", "Elite Overseas Express Pacer (Retained Core)"),
             ("10. Mohammed Shami", "Veteran Indian Seam Leader (Traded In from LSG)"),
-            ("11. Mustafizur Rahman / Matheesha Pathirana (OS)", "Auction Target (OS): Elite Death Bowling Specialist"),
-            ("12. Sandeep Sharma / Sakib Hussain (Impact)", "Impact Player: Swing & Death Specialist")
+            ("11. Mustafizur Rahman / Spencer Johnson (OS)", "Auction Target (OS): Elite Death Bowling Specialist"),
+            ("12. Sandeep Sharma / Sakib Hussain / Praful Hinge (Impact)", "Impact Player: Swing & Death Specialist")
         ]
         for name, role in best_xii:
             st.markdown(f"- **{name}** — *{role}*")
