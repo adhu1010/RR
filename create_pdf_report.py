@@ -228,7 +228,7 @@ def build_pdf_report():
         [
             Paragraph("<b>RR War-Room Purse:</b> ₹27.05 Cr | Open Slots: 6 (3 OS)", callout_style),
             Paragraph("<b>Official Roster Status:</b> 10 Franchises Confirmed", callout_style),
-            Paragraph("<b>Live War-Room:</b> <a href='https://chevy-thesis-chapters-aus.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
+            Paragraph("<b>Live War-Room:</b> <a href='https://managers-bigger-sugar-graph.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[180, 180, 180])

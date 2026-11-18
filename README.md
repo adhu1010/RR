@@ -540,7 +540,7 @@ For scouting beyond IPL capped rosters:
 
 ## 🖥️ Interactive War-Room Dashboard
 
-> 🌐 **Live Public Dashboard URL:** **[https://chevy-thesis-chapters-aus.trycloudflare.com](https://chevy-thesis-chapters-aus.trycloudflare.com)**  
+> 🌐 **Live Public Dashboard URL:** **[https://managers-bigger-sugar-graph.trycloudflare.com](https://managers-bigger-sugar-graph.trycloudflare.com)**  
 > *(Globally accessible from mobile or desktop — powered by Streamlit & Cloudflare Tunnel)*
 
 The Streamlit dashboard provides real-time exploration of the framework:
