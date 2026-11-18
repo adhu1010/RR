@@ -501,7 +501,7 @@ This is one of the most important architectural decisions in the framework:
 | **#4** | **Akeal Hosein** | Released (Chennai Super Kings) | 8 | 595 | 295 | 17 | 7.53 | **7.32** | 6.71 | -0.21 | **+0.953** |
 | **#5** | **Mustafizur Rahman** | Released (Kolkata Knight Riders) | 22 | 875 | 354 | 22 | 7.45 | **7.54** | **5.56** | +0.09 | **+0.939** |
 | **#6** | **Sikandar Raza** | Free Agent (T20I / Unattached) | 7 | 456 | 156 | 8 | 6.90 | **6.77** | 6.81 | -0.13 | **+0.825** |
-| **#7** | **Praful Hinge** | Released (Sunrisers Hyderabad) | 7 | 74 | 74 | 8 | 11.06 | **9.59** | 9.57 | -1.47 | **+0.716** |
+| **#7** | **Matheesha Pathirana** | Released (Kolkata Knight Riders) | 33 | 637 | 205 | 13 | 7.78 | **8.05** | 8.93 | +0.27 | **+0.555** |
 | **#8** | **George Linde** | Released (Lucknow Super Giants) | 3 | 111 | 81 | 6 | 7.61 | **7.90** | 8.52 | +0.29 | **+0.664** |
 | **#9** | **Joshua Little** | Free Agent (T20I / Unattached) | 11 | 390 | 66 | 3 | 7.88 | **7.85** | 7.64 | -0.03 | **+0.620** |
 | **#10** | **Wanindu Hasaranga** | Released (Lucknow Super Giants) | 35 | 999 | 308 | 23 | 7.87 | **8.13** | 8.20 | +0.26 | **+0.599** |
@@ -529,12 +529,12 @@ For scouting beyond IPL capped rosters:
 
 | Slot # | Target Role (Replacing Released RR Player) | Primary V5 Target | Backup V5 Target | Key Pressure Metric (V5) | Target Bid Cap |
 | :---: | :--- | :--- | :--- | :--- | :---: |
-| **Slot 1 (OS #1)** | Left-Arm Death Pacer *(Replaces Burger / Maphaka)* | **Mustafizur Rahman** (Rel. KKR) | Spencer Johnson (Rel. CSK) | 5.56 Pressure Econ in 2025–26 (22 Wkts) | **₹6.50 Cr – ₹8.50 Cr** |
+| **Slot 1 (OS #1)** | Overseas Death Pacer *(Replaces Burger / Maphaka)* | **Mustafizur Rahman** (Rel. KKR) | **Matheesha Pathirana** (Rel. KKR) | Mustafizur: 5.56 Econ (22 Wkts) \| Pathirana: 16.3% Bnd | **₹6.50 Cr – ₹8.50 Cr** |
 | **Slot 2 (OS #2)** | Overseas Finisher / Top-Order *(Replaces Hetmyer)* | **David Miller / Travis Head** | Pathum Nissanka (Rel. DC) | Head: 180.9 Rec SR \| Miller: 995 P-Balls | **₹6.00 Cr – ₹8.00 Cr** |
 | **Slot 3 (OS #3)** | Overseas Attacking Spinner *(Replaces Bishnoi / Puthur)* | **Wanindu Hasaranga** (Rel. LSG) | Akeal Hosein / Mujeeb Ur Rahman | Hasaranga: 80 P-Wkts \| Hosein: 6.71 Econ | **₹4.50 Cr – ₹6.00 Cr** |
 | **Slot 4 (IND #1)** | Indian Middle-Order Anchor *(Domestic Depth)* | **Karun Nair** (Rel. DC) | Sarfaraz Khan (Rel. CSK) | Nair: +1.970 BPI, 178.8 SR, 61.1 Avg | **₹2.00 Cr – ₹3.50 Cr** |
 | **Slot 5 (IND #2)** | Indian Power Finisher *(No. 6/7 Impact)* | **M Shahrukh Khan** (Rel. GT) | Abishek Porel / Nitish Rana | Shahrukh: 164.4 Pressure SR in 2025–26 | **₹1.50 Cr – ₹2.50 Cr** |
-| **Slot 6 (IND #3)** | Uncapped Death/PP Pacer *(Replaces Deshpande / Sen)* | **Sakib Hussain** (Rel. SRH) | Praful Hinge / Akash Madhwal | Sakib: 7.65 Rec Econ (-1.11 RPO Drop) | **₹0.30 Cr – ₹0.80 Cr** |
+| **Slot 6 (IND #3)** | Uncapped Death/PP Pacer *(Replaces Deshpande / Sen)* | **Sakib Hussain** (Rel. SRH) | Akash Madhwal / Gurjapneet Singh | Sakib: 7.65 Rec Econ (-1.11 RPO Drop) | **₹0.30 Cr – ₹0.80 Cr** |
 
 ---
 

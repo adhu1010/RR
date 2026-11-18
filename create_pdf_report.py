@@ -75,8 +75,8 @@ def build_pdf_report():
         pagesize=letter,
         leftMargin=36,
         rightMargin=36,
-        topMargin=42,
-        bottomMargin=46
+        topMargin=36,
+        bottomMargin=36
     )
 
     styles = getSampleStyleSheet()
@@ -133,21 +133,21 @@ def build_pdf_report():
         'Body_Custom',
         parent=styles['BodyText'],
         fontName='Helvetica',
-        fontSize=7.8,
-        leading=10.8,
+        fontSize=7.5,
+        leading=10.2,
         textColor=c_slate,
-        spaceAfter=3.5
+        spaceAfter=3
     )
 
     bullet_style = ParagraphStyle(
         'Bullet_Custom',
         parent=styles['BodyText'],
         fontName='Helvetica',
-        fontSize=7.6,
-        leading=10.4,
+        fontSize=7.3,
+        leading=9.8,
         textColor=c_slate,
         leftIndent=10,
-        spaceAfter=2
+        spaceAfter=1.8
     )
 
     callout_style = ParagraphStyle(
@@ -228,7 +228,7 @@ def build_pdf_report():
         [
             Paragraph("<b>RR War-Room Purse:</b> ₹27.05 Cr | Open Slots: 6 (3 OS)", callout_style),
             Paragraph("<b>Official Roster Status:</b> 10 Franchises Confirmed", callout_style),
-            Paragraph("<b>Live War-Room:</b> <a href='https://intelligence-sponsors-unit-common.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
+            Paragraph("<b>Live War-Room:</b> <a href='https://chevy-thesis-chapters-aus.trycloudflare.com'><font color='#254AA5'><u>trycloudflare.com (Click Here)</u></font></a>", callout_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[180, 180, 180])
@@ -257,6 +257,10 @@ def build_pdf_report():
     # Load top 10 data
     bat_b = pd.read_csv('list_b_unstop_top_batters.csv').head(10)
     bowl_b = pd.read_csv('list_b_unstop_top_bowlers.csv').head(10)
+    if 'auction_status' not in bat_b.columns and 'official_2027_status' in bat_b.columns:
+        bat_b['auction_status'] = bat_b['official_2027_status']
+    if 'auction_status' not in bowl_b.columns and 'official_2027_status' in bowl_b.columns:
+        bowl_b['auction_status'] = bowl_b['official_2027_status']
 
     story.append(Paragraph("<b>Table 1.1: Official Top-10 Batters Under Pressure (List B — Actionable IPL Targets)</b>", h2_style))
     bat_table_data = [[
@@ -362,9 +366,9 @@ def build_pdf_report():
     story.append(Spacer(1, 5))
 
     story.append(Paragraph(
-        "<i>Key Bowling Insight: <b>Matthew Humphreys</b> (6.09 pressure econ, 10.7 SR) and <b>Mahedi Hasan</b> (6.01 pressure econ, -0.87 drop) "
-        "lead global restriction. Among released IPL pacers, <b>Sakib Hussain</b> (SRH Rel) delivers an elite -1.11 economy drop with a lethal 13.0 strike rate, "
-        "while <b>Mustafizur Rahman</b> (KKR Rel) recorded 22 pressure wickets at an extraordinary 5.56 RPO in 2025–2026.</i>",
+        "<i>Key Bowling Insight: <b>Mujeeb Ur Rahman</b> (6.89 pressure econ) and <b>Sakib Hussain</b> (7.65 recent pressure econ, -1.11 drop) "
+        "lead the released auction pool. <b>Mustafizur Rahman</b> (KKR Rel) recorded 22 pressure wickets at an extraordinary 5.56 RPO in 2025–2026, "
+        "while <b>Matheesha Pathirana</b> (#7, KKR Rel) brings 51 career pressure wickets and an elite 16.3% boundary restriction.</i>",
         body_style
     ))
     story.append(Spacer(1, 5))
@@ -390,7 +394,11 @@ def build_pdf_report():
         "&bull; <b>Garbage-Time Exclusion:</b> Deliveries where the match is effectively decided ($RRR &gt; 22.0$ with 9 down, or 10 runs needed off 40 balls) are scored $P_{\\text{base}} = 0$.",
         bullet_style
     ))
-    story.append(Spacer(1, 5))
+
+    # ==========================================================================
+    # PAGE 3: 6-FACTOR ARCHITECTURE, RECENCY WEIGHTING, BPI/BoPI & ELIGIBILITY
+    # ==========================================================================
+    story.append(PageBreak())
 
     story.append(Paragraph("3. The 6-Factor Multiplicative Context Architecture", h1_style))
     story.append(Paragraph(
@@ -442,11 +450,7 @@ def build_pdf_report():
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, c_light]),
     ]))
     story.append(factor_tbl)
-
-    # ==========================================================================
-    # PAGE 3: RECENCY WEIGHTING, BPI/BoPI FORMULAS & ELIGIBILITY
-    # ==========================================================================
-    story.append(PageBreak())
+    story.append(Spacer(1, 4))
 
     story.append(Paragraph("4. Continuous Exponential Recency Weighting ($M_{\\text{recency}}$)", h1_style))
     story.append(Paragraph(
@@ -546,8 +550,10 @@ def build_pdf_report():
         "proving unmatched temperament during middle-overs collapses and late-innings accelerations.<br/>"
         "&bull; <b>Sakib Hussain (SRH Released):</b> BoPI Score of <b>+0.955</b>. Concedes 7.69 RPO under pressure, tightening his economy from 8.80 baseline "
         "(-1.11 drop) with a lethal 13.0 strike rate and 10 recent pressure wickets.<br/>"
-        "&bull; <b>Mustafizur Rahman (KKR Released):</b> BoPI Score of <b>+0.923</b>. Claimed 22 pressure wickets in 2025–2026 at an extraordinary <b>5.56 RPO economy</b>, "
-        "making him the premier death-overs cutter specialist in the auction pool.",
+        "&bull; <b>Mustafizur Rahman (KKR Released):</b> BoPI Score of <b>+0.927</b>. Claimed 22 pressure wickets in 2025–2026 at an extraordinary <b>5.56 RPO economy</b>, "
+        "making him the premier death-overs cutter specialist in the auction pool.<br/>"
+        "&bull; <b>Matheesha Pathirana (KKR Released):</b> BoPI Score of <b>+0.555</b>. Features 51 career pressure wickets with an elite 16.3% boundary restriction, "
+        "providing Rajasthan Royals with an express sling-arm death bowling enforcer to partner Jofra Archer.",
         body_style
     ))
     story.append(Spacer(1, 5))

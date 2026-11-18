@@ -646,8 +646,8 @@ with tab_warroom:
             "Slot #": "Slot 1 (OS #1)",
             "Target Role (Replacing Released RR Player)": "Left-Arm Death Pacer (Replaces Burger / Maphaka)",
             "Primary Target": "Mustafizur Rahman (Rel. KKR)",
-            "Backup Target": "Spencer Johnson (Rel. CSK)",
-            "Key Pressure Metric (V5)": "5.56 Pressure Econ in 2025–26 (22 Wkts)",
+            "Backup Target": "Matheesha Pathirana (Rel. KKR) / Spencer Johnson",
+            "Key Pressure Metric (V5)": "Mustafizur: 5.56 Econ (22 Wkts) | Pathirana: 16.3% Bnd (51 P-Wkts)",
             "Target Bid Cap": "₹6.50 Cr – ₹8.50 Cr"
         },
         {
@@ -686,7 +686,7 @@ with tab_warroom:
             "Slot #": "Slot 6 (IND #3)",
             "Target Role (Replacing Released RR Player)": "Uncapped Death/PP Pacer (Replaces Deshpande / Sen)",
             "Primary Target": "Sakib Hussain (Rel. SRH)",
-            "Backup Target": "Praful Hinge / Akash Madhwal",
+            "Backup Target": "Akash Madhwal / Gurjapneet Singh",
             "Key Pressure Metric (V5)": "Sakib: 7.65 Rec Econ (-1.11 RPO Drop)",
             "Target Bid Cap": "₹0.30 Cr – ₹0.80 Cr"
         }
@@ -707,7 +707,7 @@ with tab_warroom:
             ("8. Wanindu Hasaranga / Akeal Hosein", "Auction Target (OS): Attacking Leg-Spinner / Bowling All-Rounder"),
             ("9. Jofra Archer (OS)", "Elite Overseas Express Pacer (Retained Core)"),
             ("10. Mohammed Shami", "Veteran Indian Seam Leader (Traded In from LSG)"),
-            ("11. Mustafizur Rahman (OS)", "Auction Target (OS): Elite Left-Arm Death Bowling Specialist"),
+            ("11. Mustafizur Rahman / Matheesha Pathirana (OS)", "Auction Target (OS): Elite Death Bowling Specialist"),
             ("12. Sandeep Sharma / Sakib Hussain (Impact)", "Impact Player: Swing & Death Specialist")
         ]
         for name, role in best_xii:
