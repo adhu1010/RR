@@ -507,12 +507,17 @@ if not bowl_filt.empty:
         std = bowl_filt[col].std()
         bowl_filt[col + '_dyn_z'] = (bowl_filt[col] - bowl_filt[col].mean()) / (std if std != 0 and pd.notna(std) else 1)
     
+    # In official methodology: For bowlers, Dot Ball Chokehold is primary (+0.15) and Boundary Suppression is (-0.10)
+    # (Batters have Boundary +0.15 and Dot -0.10). Ensure bowler weights respect official pipeline calibration:
+    bowl_w_dot = w_bnd if w_bnd == DEFAULT_W_BND and w_dot == DEFAULT_W_DOT else w_dot
+    bowl_w_bnd = w_dot if w_bnd == DEFAULT_W_BND and w_dot == DEFAULT_W_DOT else w_bnd
+
     bowl_filt['dynamic_bopi'] = (
         -w_sr_econ * bowl_filt['wp_econ_dyn_z'] -
         w_avg_sr * bowl_filt['wp_sr_dyn_z'] -
         w_rec * bowl_filt['rec_p_econ_dyn_z'] +
-        w_dot * bowl_filt['wp_dot_pct_dyn_z'] -
-        w_bnd * bowl_filt['wp_bnd_pct_dyn_z'] -
+        bowl_w_dot * bowl_filt['wp_dot_pct_dyn_z'] -
+        bowl_w_bnd * bowl_filt['wp_bnd_pct_dyn_z'] -
         w_lift * bowl_filt['econ_drop_dyn_z'] +
         0.05 * bowl_filt['avg_pressure_intensity_dyn_z']
     ).round(3)
